@@ -52,7 +52,7 @@
          */
         constructor(size, speedX, speedY, maxX, maxY, spawnX, spawnY, object) {
             this.size = Math.random() * (size - (size - .6)) + (size - .6);
-            this.speedX = Math.random() * (speedX - (speedX - 0.05)) + (speedX - 0.05);
+            this.speedX = Math.random() * (speedX - (speedX - 0.04)) + (speedX - 0.04);
             this.speedY = Math.random() * (speedY - (speedY - 0.05)) + (speedY - 0.05);;
             this.maxX = maxX;
             this.maxY = Math.random() * (maxY - (maxY - 5)) + (maxY - 5);;
