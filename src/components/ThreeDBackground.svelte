@@ -16,13 +16,70 @@
 
     const loader = new OBJLoader();
 
+    const clock = new THREE.Clock();
+
     // @ts-ignore
     import * as THREE from 'three';
-    const bunniesAmount = 10;
+    const objectCount = 15;
     /**
-     * @type {{ rotation: {x: number; y: number; z: number; }; position: {x: number; y: number; z: number; };}[]}
+     * @type {Array.<FloatingObject>}
      */
     const bunnies = [];
+    /**
+     * @type {Array.<FloatingObject>}
+     */
+    const hearts = [];
+    /**
+     * @type {Array.<FloatingObject>}
+     */
+    const stars = [];
+
+    class FloatingObject {
+        time = Math.random() * 5;
+        plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+        rotateX = Math.random() * 0.01;
+        rotateY = Math.random() * 0.01;
+        rotateZ = Math.random() * 0.01;
+        /**
+         * @param {number} size
+         * @param {number} speedX
+         * @param {number} speedY
+         * @param {number} maxX
+         * @param {number} maxY
+         * @param {number} spawnX
+         * @param {number} spawnY
+         * @param {any} object
+         */
+        constructor(size, speedX, speedY, maxX, maxY, spawnX, spawnY, object) {
+            this.size = Math.random() * (size - (size - .6)) + (size - .6);
+            this.speedX = Math.random() * (speedX - (speedX - 0.05)) + (speedX - 0.05);
+            this.speedY = Math.random() * (speedY - (speedY - 0.05)) + (speedY - 0.05);;
+            this.maxX = maxX;
+            this.maxY = Math.random() * (maxY - (maxY - 5)) + (maxY - 5);;
+            this.spawnX = Math.random() * (spawnX - (spawnX - 10)) + (spawnX - 10);
+            this.spawnY = Math.random() * (spawnY - (spawnY - 20)) + (spawnY - 20);
+            this.object = object;
+            this.object.scale.set(size,size,size);
+            this.object.position.x = this.spawnX;
+            this.object.position.y = this.spawnY;
+            
+        }
+        /**
+         * @param {number} timeAdd
+         */
+        animate(timeAdd) {
+            if(this.object.position.x >= this.maxX) {
+                this.object.position.x = this.spawnX;
+                this.object.position.y = this.spawnY;
+            }
+            this.time += timeAdd;
+            this.object.position.y = ( Math.sin(this.time * this.speedY) * this.maxY);
+            this.object.rotation.x += this.rotateX;
+            this.object.rotation.y += this.rotateY;
+            this.object.rotation.z += this.rotateZ;
+            this.object.position.x += this.speedX;
+        }
+    }
 
     onMount(() => {
         // @ts-ignore
@@ -33,11 +90,10 @@
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( renderer.domElement);
 
-        const pinkMat = new THREE.MeshToonMaterial( { color: 'hotpink'} );
+        const pinkMat = new THREE.MeshToonMaterial( { color: '#ffa5d2'} );
         const whiteMat = new THREE.MeshToonMaterial( { color: 'white'} );
-        const cyanMat = new THREE.MeshToonMaterial( { color: 'rgb(0, 195, 255)'} );
-        const yellowMat = new THREE.MeshToonMaterial( { color: 'yellow'} );
-        let time = 0;
+        const cyanMat = new THREE.MeshToonMaterial( { color: '#76d4df'} );
+        const yellowMat = new THREE.MeshToonMaterial( { color: '#fffb0a'} );
 
         const composer = new EffectComposer(renderer);
         const renderPass = new RenderPass( scene, camera );
@@ -62,8 +118,8 @@
          */
         let selectedObjects = [];
 
-        loader.load('/models/star.obj', (/** @type {{ clone: () => any; }} */ model) => {
-            for (let i = 0; i < bunniesAmount; i++) {
+        loader.load('/models/bunny.obj', (/** @type {{ clone: () => any; }} */ model) => {
+            for (let i = 0; i < objectCount; i++) {
                 let bunny = model.clone();
                 bunny.traverse( (/** @type {{ isMesh: any; material: any; }} */ child) => {
                     if (child.isMesh){
@@ -84,10 +140,65 @@
                         }
                     }
                 })
-                bunnies[i] = bunny;
-                bunnies[i].position.x = Math.floor(Math.random() * (34 + 34) - 34);
+                bunnies[i] = new FloatingObject(0.7,0.05,0.75,64,10,-38,0,bunny);
                 selectedObjects.push(bunny);
-                scene.add(bunnies[i]);
+                scene.add(bunny);
+            }
+            outlinePass.selectedObjects = selectedObjects;
+        });
+        loader.load('/models/heart.obj', (/** @type {{ clone: () => any; }} */ model) => {
+            for (let i = 0; i < objectCount; i++) {
+                let heart = model.clone();
+                heart.traverse( (/** @type {{ isMesh: any; material: any; }} */ child) => {
+                    if (child.isMesh){
+                        let random = Math.floor(Math.random() * 4);
+                        switch(random) {
+                            case 0:
+                                child.material = pinkMat;
+                                break;
+                            case 1:
+                                child.material = whiteMat;
+                                break;
+                            case 2:
+                                child.material = cyanMat;
+                                break;
+                            case 3:
+                                child.material = yellowMat;
+                                break;
+                        }
+                    }
+                })
+                hearts[i] = new FloatingObject(0.7,0.05,0.75,64,10,-38,0,heart);
+                selectedObjects.push(heart);
+                scene.add(heart);
+            }
+            outlinePass.selectedObjects = selectedObjects;
+        });
+        loader.load('/models/star.obj', (/** @type {{ clone: () => any; }} */ model) => {
+            for (let i = 0; i < objectCount; i++) {
+                let star = model.clone();
+                star.traverse( (/** @type {{ isMesh: any; material: any; }} */ child) => {
+                    if (child.isMesh){
+                        let random = Math.floor(Math.random() * 4);
+                        switch(random) {
+                            case 0:
+                                child.material = pinkMat;
+                                break;
+                            case 1:
+                                child.material = whiteMat;
+                                break;
+                            case 2:
+                                child.material = cyanMat;
+                                break;
+                            case 3:
+                                child.material = yellowMat;
+                                break;
+                        }
+                    }
+                })
+                stars[i] = new FloatingObject(0.7,0.05,0.75,64,10,-38,0,star);
+                selectedObjects.push(star);
+                scene.add(star);
             }
             outlinePass.selectedObjects = selectedObjects;
         });
@@ -102,14 +213,18 @@
 
         function animate() {
             requestAnimationFrame( animate );
-            time += 0.005;
-            for (let i = 0; i < bunniesAmount; i++) {
+            let timeDelta = clock.getDelta();
+            for (let i = 0; i < objectCount; i++) {
+                bunnies[i].animate(timeDelta);
+                hearts[i].animate(timeDelta);
+                stars[i].animate(timeDelta);
                 //bunnies[i].position.x += .00001;
-                bunnies[i].rotation.x += 0.002 * (i+1);
-                bunnies[i].rotation.y += 0.002 * (i+1);
-                bunnies[i].rotation.z += 0.002 * (i+1);
-                bunnies[i].position.y = (i+1)/2 + (i+1) * Math.sin((time+(i+1))/1) - 5;
-                bunnies[i].position.x = 100/2 + 25 * Math.sin((time+(i+1))/2) - 50;
+                // bunnies[i].rotation.x += 0.002 * (i+1);
+                // bunnies[i].rotation.y += 0.002 * (i+1);
+                // bunnies[i].rotation.z += 0.002 * (i+1);
+                // bunnies[i].position.y = Math.sin(0.75 * time) * 8;
+                // bunnies[i].position.x += 0.08;
+                //bunnies[i].position.x = 100/2 + 25 * Math.sin((time+(i+1))/2) - 50;
             }
             composer.render();
         }
