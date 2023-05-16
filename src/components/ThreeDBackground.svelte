@@ -20,7 +20,7 @@
 
     // @ts-ignore
     import * as THREE from 'three';
-    const objectCount = 15;
+    const objectCount = 20;
     /**
      * @type {Array.<FloatingObject>}
      */
@@ -33,6 +33,8 @@
      * @type {Array.<FloatingObject>}
      */
     const stars = [];
+    const maxObjectSize = 0.65;
+    const minObjectSize = 0.25;
 
     class FloatingObject {
         time = Math.random() * 5;
@@ -41,7 +43,6 @@
         rotateY = Math.random() * 0.01;
         rotateZ = Math.random() * 0.01;
         /**
-         * @param {number} size
          * @param {number} speedX
          * @param {number} speedY
          * @param {number} maxX
@@ -49,20 +50,21 @@
          * @param {number} spawnX
          * @param {number} spawnY
          * @param {any} object
+         * @param {number} zIndex
          */
-        constructor(size, speedX, speedY, maxX, maxY, spawnX, spawnY, object) {
-            this.size = Math.random() * (size - (size - .6)) + (size - .6);
-            this.speedX = Math.random() * (speedX - (speedX - 0.04)) + (speedX - 0.04);
+        constructor(speedX, speedY, maxX, maxY, spawnX, spawnY, object, zIndex) {
+            this.size = Math.random() * (maxObjectSize - minObjectSize) + minObjectSize;
+            this.speedX = Math.random() * (speedX - (speedX - 0.045)) + (speedX - 0.045);
             this.speedY = Math.random() * (speedY - (speedY - 0.05)) + (speedY - 0.05);;
             this.maxX = maxX;
             this.maxY = Math.random() * (maxY - (maxY - 5)) + (maxY - 5);;
             this.spawnX = Math.random() * (spawnX - (spawnX - 10)) + (spawnX - 10);
             this.spawnY = Math.random() * (spawnY - (spawnY - 20)) + (spawnY - 20);
             this.object = object;
-            this.object.scale.set(size,size,size);
+            this.object.scale.set(this.size,this.size,this.size);
             this.object.position.x = this.spawnX;
             this.object.position.y = this.spawnY;
-            
+            this.object.position.z = zIndex;
         }
         /**
          * @param {number} timeAdd
@@ -140,7 +142,7 @@
                         }
                     }
                 })
-                bunnies[i] = new FloatingObject(0.7,0.05,0.75,64,10,-38,0,bunny);
+                bunnies[i] = new FloatingObject(0.05,0.75,40,10,-38,0,bunny,0 + i * 5);
                 selectedObjects.push(bunny);
                 scene.add(bunny);
             }
@@ -168,7 +170,7 @@
                         }
                     }
                 })
-                hearts[i] = new FloatingObject(0.7,0.05,0.75,64,10,-38,0,heart);
+                hearts[i] = new FloatingObject(0.05,0.75,40,10,-38,0,heart,100 + i * 5);
                 selectedObjects.push(heart);
                 scene.add(heart);
             }
@@ -196,7 +198,7 @@
                         }
                     }
                 })
-                stars[i] = new FloatingObject(0.7,0.05,0.75,64,10,-38,0,star);
+                stars[i] = new FloatingObject(0.05,0.75,40,10,-38,0,star,200 + i * 5);
                 selectedObjects.push(star);
                 scene.add(star);
             }
@@ -236,6 +238,6 @@
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 1;
+        z-index: -1;
     }
 </style>
