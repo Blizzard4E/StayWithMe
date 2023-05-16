@@ -4,16 +4,27 @@
     import ThreeDBackground from "../components/ThreeDBackground.svelte";
 
 </script>
+
+<div class="clickable"></div>
 <BackgroundStars/>
 <div class="logo">
     <h1>S<span>T</span>A<span>Y</span></h1>
     <h2>W<span class="medium">I</span><span class="small">TH</span><span class="medium">M</span>E</h2>
+</div>
+<div class="click">
+    <p>Click to Continue</p>
 </div>
 <div class="background">
     <ThreeDBackground/>
 </div>
 
 <style lang="scss">
+    .clickable {
+        position: fixed;
+        z-index: 5;
+        width: 100%;
+        height: 100vh;
+    }
     .background {
         position: relative;
         z-index: 0;
@@ -29,6 +40,22 @@
         z-index: 4;
         display: grid;
         place-items: center;
+    }
+    .click {
+        position: fixed;
+        bottom: 0%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+        p {
+            opacity: 1;
+            letter-spacing: .35rem;
+            font-family: 'Righteous',cursive;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            color: white;
+            animation: fadeInOut 2s ease-in infinite;
+        }
     }
     h1,h2 {
         font-family: 'Yeseva One', cursive;
@@ -58,5 +85,10 @@
         .small {
             font-size: 3rem;
         }
+    }
+    @keyframes fadeInOut {
+        0% { opacity: 1; }
+        50% { opacity: 0;}
+        100% { opacity: 1;}
     }
 </style>

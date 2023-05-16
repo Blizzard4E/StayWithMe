@@ -24,9 +24,9 @@
      * @type {HTMLDivElement}
      */
     let scene;
-    const starCount = 25    ;
+    const starCount = 30    ;
     const maxStarSize = 50;
-    const minStarSize = 20;
+    const minStarSize = 10;
     const maxBlinkSpeed = 0.7;
     const minBlinkSpeed = 0.5;
     /**

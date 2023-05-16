@@ -33,7 +33,7 @@
      * @type {Array.<FloatingObject>}
      */
     const stars = [];
-    const maxObjectSize = 0.65;
+    const maxObjectSize = 0.7;
     const minObjectSize = 0.25;
 
     class FloatingObject {
@@ -65,6 +65,7 @@
             this.object.position.x = this.spawnX;
             this.object.position.y = this.spawnY;
             this.object.position.z = zIndex;
+            this.animate(70); //fast forward movement, no need to build up
         }
         /**
          * @param {number} timeAdd
