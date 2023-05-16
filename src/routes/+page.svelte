@@ -38,6 +38,7 @@
         opacity: .9;
         -webkit-text-stroke-width: 2px;
         -webkit-text-stroke-color: #fc4573;
+        user-select: none;
         span {
             color: black;
         }
