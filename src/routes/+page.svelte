@@ -1,29 +1,51 @@
 <script>
+    import { transitionState } from "../store";
+    import { goto } from "$app/navigation";
     import BackgroundStars from "../components/BackgroundStars.svelte";
     import Navbar from "../components/Navbar.svelte";
     import ThreeDBackground from "../components/ThreeDBackground.svelte";
+    import { onMount } from "svelte";
 
+	function home() {
+        transitionState.update(state => 1);
+        setTimeout(() => {
+            goto('/home');
+        }, 1000);
+    }
+
+    onMount(() => {
+        transitionState.update(state => 0);
+    })
 </script>
 
-<div class="clickable"></div>
-<BackgroundStars/>
-<div class="logo">
-    <h1>S<span>T</span>A<span>Y</span></h1>
-    <h2>W<span class="medium">I</span><span class="small">TH</span><span class="medium">M</span>E</h2>
-</div>
-<div class="click">
-    <p>Click to Continue</p>
-</div>
-<div class="background">
-    <ThreeDBackground/>
+<div class="bg">
+    <div class="clickable" on:click={home}></div>
+    <div class="content">
+        <BackgroundStars/>
+        <div class="logo">
+            <h1>S<span>T</span>A<span>Y</span></h1>
+            <h2>W<span class="medium">I</span><span class="small">TH</span><span class="medium">M</span>E</h2>
+        </div>
+        <div class="click">
+            <p>Click to Continue</p>
+        </div>
+        <div class="background">
+            <ThreeDBackground/>
+        </div>
+    </div>
 </div>
 
 <style lang="scss">
+    .bg {
+        background: $pink;
+    }
     .clickable {
+        cursor: pointer;
         position: fixed;
-        z-index: 5;
+        z-index: 8;
         width: 100%;
         height: 100vh;
+        overflow: hidden;
     }
     .background {
         position: relative;
@@ -48,11 +70,12 @@
         transform: translateX(-50%);
         z-index: 4;
         p {
+            text-align: center;
             opacity: 1;
             letter-spacing: .35rem;
             font-family: 'Righteous',cursive;
             margin-bottom: 2rem;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: white;
             animation: fadeInOut 2s ease-in infinite;
         }
@@ -85,6 +108,16 @@
         .small {
             font-size: 3rem;
         }
+    }
+    .content {
+        opacity: 0;
+        animation: hide 1.2s;
+        animation-fill-mode: forwards;
+    }
+    @keyframes hide {
+        0% { opacity: 0; }
+        50% { opacity: 0;}
+        100% { opacity: .9;}
     }
     @keyframes fadeInOut {
         0% { opacity: 1; }

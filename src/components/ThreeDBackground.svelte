@@ -35,6 +35,11 @@
     const stars = [];
     const maxObjectSize = 0.7;
     const minObjectSize = 0.25;
+    /**
+     * @type {HTMLDivElement}
+     */
+    let threeJs;
+    let bigHeart;
 
     class FloatingObject {
         time = Math.random() * 5;
@@ -90,8 +95,9 @@
         // @ts-ignore
         const camera = new THREE.OrthographicCamera( window.innerWidth / - 50, window.innerWidth / 50, window.innerHeight / 50, window.innerHeight / -50, - 500, 1000); 
         const renderer = new THREE.WebGLRenderer( { alpha: true } );
+        renderer.setClearColor( 0xffffff, 0 );
         renderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild( renderer.domElement);
+        threeJs.appendChild( renderer.domElement);
 
         const pinkMat = new THREE.MeshToonMaterial( { color: '#ffa5d2'} );
         const whiteMat = new THREE.MeshToonMaterial( { color: 'white'} );
@@ -204,7 +210,9 @@
                 scene.add(star);
             }
             outlinePass.selectedObjects = selectedObjects;
+            animate();
         });
+
         //shader
         const effectFXAA = new ShaderPass(FXAAShader);
         effectFXAA.uniforms["resolution"].value.set(
@@ -231,14 +239,6 @@
             }
             composer.render();
         }
-        animate();
     })
 </script>
-<style>
-    canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: -1;
-    }
-</style>
+<div bind:this={threeJs}></div>

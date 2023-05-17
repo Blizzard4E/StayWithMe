@@ -55,6 +55,7 @@
             animation: starAnimation;
             animation-iteration-count: infinite;
             animation-duration:${blinkSpeed}s;
+            animation-delay: 1s;
             '>`;
         } while(twinkleStars.length < starCount)
         console.log(twinkleStars);

@@ -8,6 +8,7 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: white;
 }
 @import url('https://fonts.googleapis.com/css2?family=Cardo&family=Dela+Gothic+One&family=Righteous&family=Roboto:wght@300;400;500;700&family=Yeseva+One&display=swap');
 .container {
@@ -19,7 +20,6 @@ canvas {
     top: 0;
     left: 0;
     z-index: 1;
-    color: #88d7ff;
 }
 @keyframes starAnimation {
     0% { transform: scale(1); }
