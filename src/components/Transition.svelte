@@ -49,10 +49,10 @@
          * @param {number} time
          */
         transitionOut(time) {
+            threeJs.style.display = "block";
             if(this.object.scale.x <= 40){
                 this.object.scale.set(this.object.scale.x + this.speed * time, this.object.scale.y + this.speed * time, this.object.scale.z + this.speed * time)
             }
-            console.log(this.object.scale.x);
         }
         /**
          * @param {number} time
@@ -60,11 +60,11 @@
         transitionIn(time) {
             if(this.object.scale.x <= 0) {
                 this.object.scale.set(0, 0, 0);
+                threeJs.style.display = "none";
             }
             else if(this.object.scale.x > 0){
                 this.object.scale.set(this.object.scale.x - this.speed * time, this.object.scale.y - this.speed * time, this.object.scale.z - this.speed * time);
             }
-            console.log(this.object.scale.x);
         }
     }
 
@@ -136,6 +136,7 @@
             requestAnimationFrame( animate );
             let timeDelta = clock.getDelta();
             if(transitionStateValue) {
+                threeJs.style.display = "block";
                 hearts[0].transitionOut(timeDelta);
             }
             else {
@@ -146,4 +147,8 @@
     })
 
 </script>
-<div bind:this={threeJs}></div>
+<div class="three" bind:this={threeJs}></div>
+<style>
+    .three {
+    }
+</style>
