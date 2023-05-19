@@ -70,6 +70,7 @@
         transform: translateX(-50%);
         z-index: 4;
         p {
+            margin-left: .7rem;
             text-align: center;
             opacity: 1;
             letter-spacing: .35rem;
@@ -94,6 +95,7 @@
         }
     }
     h2 {
+        margin-left: 2rem;
         display: flex;
         align-items: center;
         letter-spacing: 1rem;

@@ -100,6 +100,7 @@
         top: 0;
         left: 0;
         z-index: 0;
+        user-select: none;
 
         img {
             

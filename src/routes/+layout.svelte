@@ -1,8 +1,12 @@
 <script>
+    import { onMount } from "svelte";
     import "../app.scss";
     import Transition from "../components/Transition.svelte";
-    
+    import MusicPlayer from "../components/MusicPlayer.svelte";
+
 </script>
+
+<MusicPlayer/>
 <div class="transition">
     <Transition/>
 </div>
