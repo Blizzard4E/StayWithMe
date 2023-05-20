@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import BackgroundStarsPink from "../../components/BackgroundStarsPink.svelte";
     import { transitionState } from "../../store";
+    import Review from "../../components/Review.svelte";
 
     let currentPos = 0;
     /**
@@ -82,6 +83,7 @@
         </ul>
     </div>
     <div class="book-btn"><button class="book">Book Rooms</button></div>
+    <Review/>
 </div>
 <style lang="scss">
     .book-btn {

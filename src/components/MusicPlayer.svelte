@@ -10,13 +10,12 @@
 
     onMount(() => {
         music.volume = volume;
-        music.autoplay = true;
+        music.loop = true;
         if(music.paused) {
             muteSign = true;
         }
     })
     
-    let musicPause = false;
     function toggleMusic() {
         music.volume = volume;
         if(music.paused) {
@@ -30,7 +29,7 @@
     }
 </script>
 
-<audio src="/sounds/idol.mp3" bind:this={music} autoplay></audio>
+<audio src="/sounds/idol.mp3" bind:this={music} autoplay loop></audio>
 <button on:click={toggleMusic}>
     <img src="/images/musical-note.png" alt="Mute/Unmute Button">
     <div id="mute" class="{muteSign ? 'muted' : 'unmuted'}"></div>

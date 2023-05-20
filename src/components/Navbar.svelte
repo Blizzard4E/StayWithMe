@@ -2,29 +2,76 @@
     import { goto } from "$app/navigation";
     import { transitionState } from "../store";
 
-    function home() {
+    /**
+     * @param {string | URL} path
+     */
+    function transition(path) {
         transitionState.update(state => 1);
         setTimeout(() => {
-            goto('/');
+            goto(path);
         }, 1000);
     }
 </script>
 <div class="container">
     <nav>
-        <div class="logo" on:click={home}>
+        <div class="logo" on:click={() => {transition('/')}}>
             <h1>S<span>T</span>A<span>Y</span></h1>
             <h2>W<span class="medium">I</span><span class="small">TH</span><span class="medium">M</span>E</h2>
         </div>
-        <div class="profile">
-            <h3><span>B</span>lizzard Einzbern</h3>
-            <img src="/images/profile.webp" alt="">
+        <div class="others">
+            <div class="links">
+                <a on:click={() => {transition('/login')}}>Login</a>
+                <a on:click={() => {transition('/hotelManager')}}>Manage Hotel</a>
+                <a on:click={() => {transition('/createHotel')}}>Create Hotel</a>
+                <a on:click={() => {transition('/createUser')}}>Create Account</a>
+            </div>
+            <div class="bell">
+                <img src="/svg/bell.svg" alt="notification bell">
+            </div>
+            <div class="profile">
+                <h3><span>B</span>lizzard Einzbern</h3>
+                <img src="/images/profile.webp" alt="">
+            </div>
         </div>
     </nav>
 </div>
 
 <style lang="scss">
+    .others {
+        display: flex;
+        align-items: center;
+    }
+    .bell {
+        cursor: pointer;
+        margin-right: 2rem;
+        transition: 0.15s ease-in-out;
+        img {
+            filter: invert(70%) sepia(89%) saturate(4718%) hue-rotate(301deg) brightness(100%) contrast(106%);
+            width: 30px;
+            height: auto;
+        }
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
     .hide {
         display: none;
+    }
+    .links {
+        display: flex;
+        align-items: center;
+    }
+    a {
+        color: black;
+        margin: 1rem;
+        text-decoration: none;
+        font-family: 'Poppins',sans-serif;
+        cursor: pointer;
+        transition: 0.1s ease-in-out;
+        &:hover {
+            transform: scale(1.1);
+            color: $pink2;
+        }
     }
     .profile {
         cursor: pointer;

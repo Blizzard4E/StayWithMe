@@ -5,16 +5,23 @@
     import ThreeDBackground from "../../components/ThreeDBackground.svelte";
     import BackgroundStarsPink from "../../components/BackgroundStarsPink.svelte";
     import NewHotels from "../../components/NewHotels.svelte";
+    import { goto } from "$app/navigation";
 
     onMount(() => {
         transitionState.update(state => 0);
     })
+    function country() {
+        transitionState.update(state => 1);
+        setTimeout(() => {
+            goto('/country');
+        }, 1000);
+    }
 </script>
 <BackgroundStarsPink/>
 <div class="container">
     <h1><span>Top</span> Places</h1>
     <div class="grid-1">
-        <div class="main">
+        <div class="main" on:click={country}>
             <div class="img" style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_0.jpg');background-position:center;background-size:cover;"></div>
             <h2>Cambodia</h2>
             <div class="detail">
@@ -22,7 +29,7 @@
                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo, molestiae ab iure praesentium vitae veniam eum saepe ex quia vel. Dolorum incidunt quidem molestias vitae aliquam et ipsam facere officiis.</p>
             </div>
         </div>
-        <div class="side-1">
+        <div class="side-1" on:click={country}>
             <div class="img" style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.2)), url('/placeholder_1.jpg');background-position:center;background-size:cover;"></div>
             <h2>France</h2>
             <div class="detail">
@@ -30,7 +37,7 @@
                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo, molestiae ab iure praesentium vitae veniam eum saepe ex quia vel.</p>
             </div>
         </div>
-        <div class="side-2">
+        <div class="side-2" on:click={country}>
             <div class="img" style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_2.jpg');background-position:center;background-size:cover;"></div>
             <h2>United States</h2>
             <div class="detail">
@@ -46,6 +53,7 @@
         position: relative;
         z-index: 1;
         padding-bottom: 2rem;
+        background-color: rgba(252, 247, 247, 0.7);
     }
     h1 {
         font-size: 1.7rem;
