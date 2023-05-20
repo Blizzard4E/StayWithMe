@@ -13,7 +13,6 @@
         }, 1000);
     }
 </script>
-<BackgroundStarsPink/>
 <div class="container">
     <h1>Cambodia</h1>
     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus sed esse eum molestiae iusto quis ab, iste consectetur obcaecati. Corporis temporibus amet cum ipsum quod voluptatibus natus architecto soluta error!</p>

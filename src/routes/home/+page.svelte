@@ -17,7 +17,6 @@
         }, 1000);
     }
 </script>
-<BackgroundStarsPink/>
 <div class="container">
     <h1><span>Top</span> Places</h1>
     <div class="grid-1">

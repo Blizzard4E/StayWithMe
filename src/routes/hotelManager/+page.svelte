@@ -6,7 +6,6 @@
             transitionState.update(state => 0);
         })
     </script>
-    <BackgroundStarsPink/>
     <div class="container">
         <div class="grid">
             <div>

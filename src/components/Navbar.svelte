@@ -1,6 +1,8 @@
 <script>
     import { goto } from "$app/navigation";
     import { transitionState } from "../store";
+    import BackgroundStarsPink from "./BackgroundStarsPink.svelte";
+    import ThreeDBackgroundVertical from "./ThreeDBackgroundVertical.svelte";
 
     /**
      * @param {string | URL} path
@@ -12,6 +14,8 @@
         }, 1000);
     }
 </script>
+<div class="objects"><ThreeDBackgroundVertical/></div>
+<BackgroundStarsPink/>
 <div class="container">
     <nav>
         <div class="logo" on:click={() => {transition('/')}}>
@@ -37,6 +41,10 @@
 </div>
 
 <style lang="scss">
+    .objects {
+        position: relative;
+        z-index: 0;
+    }
     .others {
         display: flex;
         align-items: center;
@@ -98,10 +106,11 @@
         }
     }
     nav {
+        background-color: rgba(252, 247, 247, 0.7);
         justify-content: space-between;
         position: relative;
         padding-top: 1rem;
-        z-index: 1;
+        z-index: 2;
         display: flex;
     }
     .logo {

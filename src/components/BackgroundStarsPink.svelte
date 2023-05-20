@@ -24,7 +24,7 @@
      * @type {HTMLDivElement}
      */
     let scene;
-    const starCount = 25    ;
+    const starCount = 30;
     const maxStarSize = 50;
     const minStarSize = 10;
     const maxBlinkSpeed = 0.7;
@@ -99,7 +99,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 0;
+        z-index: 1;
         user-select: none;
 
         img {
