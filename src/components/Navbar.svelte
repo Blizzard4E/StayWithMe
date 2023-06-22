@@ -1,40 +1,87 @@
 <script>
+    import jwt_decode from "jwt-decode";
     import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
     import { transitionState } from "../store";
     import BackgroundStarsPink from "./BackgroundStarsPink.svelte";
     import ThreeDBackgroundVertical from "./ThreeDBackgroundVertical.svelte";
+    import { json } from "@sveltejs/kit";
 
+    // async function autoLogin() {
+    //     let cookie = JSON.parse(`{\"${document.cookie.replace(/=/g,'\":\"').replace(/; /g,'\",\"')}\"}`);
+    //     const response = await fetch('http://0.tcp.ap.ngrok.io:17321/users/autoLogin', {method: 'POST'});
+    //     const jsonData = await response.json();
+
+    //     console.log(jsonData)
+
+    //     if(jsonData.status == 200) {
+    //         cookie = JSON.parse(`{\"${document.cookie.replace(/=/g,'\":\"').replace(/; /g,'\",\"')}\"}`);
+
+    //         let user = jwt_decode(cookie.accessToken)
+    //         console.log(user)
+    //     }
+    // }
+    onMount(() => {
+        /*!const response = await fetch('http://0.tcp.ap.ngrok.io:17321/users/autoLogin', {method: 'POST'});*/
+        //!const jsonData = await response.json();
+    });
     /**
      * @param {string | URL} path
      */
     function transition(path) {
-        transitionState.update(state => 1);
+        transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
         }, 1000);
     }
 </script>
-<div class="objects"><ThreeDBackgroundVertical/></div>
-<BackgroundStarsPink/>
+
+<div class="objects"><ThreeDBackgroundVertical /></div>
+<BackgroundStarsPink />
 <div class="container">
     <nav>
-        <div class="logo" on:click={() => {transition('/')}}>
+        <div
+            class="logo"
+            on:click={() => {
+                transition("/");
+            }}
+        >
             <h1>S<span>T</span>A<span>Y</span></h1>
-            <h2>W<span class="medium">I</span><span class="small">TH</span><span class="medium">M</span>E</h2>
+            <h2>
+                W<span class="medium">I</span><span class="small">TH</span><span
+                    class="medium">M</span
+                >E
+            </h2>
         </div>
         <div class="others">
             <div class="links">
-                <a on:click={() => {transition('/login')}}>Login</a>
-                <a on:click={() => {transition('/hotelManager')}}>Manage Hotel</a>
-                <a on:click={() => {transition('/createHotel')}}>Create Hotel</a>
-                <a on:click={() => {transition('/createUser')}}>Create Account</a>
+                <a
+                    on:click={() => {
+                        transition("/login");
+                    }}>Login</a
+                >
+                <a
+                    on:click={() => {
+                        transition("/hotelManager");
+                    }}>Manage Hotel</a
+                >
+                <a
+                    on:click={() => {
+                        transition("/createHotel");
+                    }}>Create Hotel</a
+                >
+                <a
+                    on:click={() => {
+                        transition("/createUser");
+                    }}>Create Account</a
+                >
             </div>
             <div class="bell">
-                <img src="/svg/bell.svg" alt="notification bell">
+                <img src="/svg/bell.svg" alt="notification bell" />
             </div>
             <div class="profile">
                 <h3><span>B</span>lizzard Einzbern</h3>
-                <img src="/images/profile.webp" alt="">
+                <img src="/images/profile.webp" alt="" />
             </div>
         </div>
     </nav>
@@ -54,7 +101,8 @@
         margin-right: 2rem;
         transition: 0.15s ease-in-out;
         img {
-            filter: invert(70%) sepia(89%) saturate(4718%) hue-rotate(301deg) brightness(100%) contrast(106%);
+            filter: invert(70%) sepia(89%) saturate(4718%) hue-rotate(301deg)
+                brightness(100%) contrast(106%);
             width: 30px;
             height: auto;
         }
@@ -73,7 +121,7 @@
         color: black;
         margin: 1rem;
         text-decoration: none;
-        font-family: 'Poppins',sans-serif;
+        font-family: "Poppins", sans-serif;
         cursor: pointer;
         transition: 0.1s ease-in-out;
         &:hover {
@@ -90,7 +138,7 @@
             transform: scale(1.1);
         }
         h3 {
-            font-family: 'Poppins',sans-serif;
+            font-family: "Poppins", sans-serif;
             font-size: 1.5rem;
             margin-right: 1rem;
             span {
@@ -123,9 +171,10 @@
             transform: scale(1.1);
         }
 
-        h1,h2 {
-            font-family: 'Yeseva One', cursive;
-            font-weight: normal;    
+        h1,
+        h2 {
+            font-family: "Yeseva One", cursive;
+            font-weight: normal;
             font-size: 4rem;
             color: $pink2;
             user-select: none;
@@ -136,11 +185,11 @@
         h2 {
             display: flex;
             align-items: center;
-            letter-spacing: .2rem;
-            font-family: 'Righteous',cursive;
+            letter-spacing: 0.2rem;
+            font-family: "Righteous", cursive;
             font-size: 1.5rem;
             color: black;
-            margin-top: -.8rem;
+            margin-top: -0.8rem;
             -webkit-text-stroke-width: 1px;
             .medium {
                 font-size: 1.3rem;

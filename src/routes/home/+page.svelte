@@ -7,6 +7,9 @@
     import NewHotels from "../../components/NewHotels.svelte";
     import { goto } from "$app/navigation";
 
+    export let data;
+    console.log(data);
+    
     onMount(() => {
         transitionState.update(state => 0);
     })

@@ -2,19 +2,29 @@
     import { onMount } from "svelte";
     import { transitionState } from "../../store";
 
-    let email, password;
+    let email,
+        password,
+        username,
+        bio,
+        profile_pic = "cat";
 
-    async function login() {
+    async function signUp() {
         console.log("Requesting");
-        const response = await fetch("../api/login", {
+        const response = await fetch("../api/signUp", {
             method: "POST",
-            body: JSON.stringify({ email: email, password: password }),
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password,
+                bio: bio,
+                profile_pic: profile_pic,
+            }),
         });
         const data = await response.json();
         if (data.status == 200) {
             document.cookie = data.accessToken;
             document.cookie = data.refreshToken;
-            console.log("Successful Login");
+            console.log("Successful Sign Up");
         }
     }
 
@@ -24,15 +34,23 @@
 </script>
 
 <div class="container">
-    <form>
-        <h1><span>L</span>ogin</h1>
+    <form action="">
+        <h1><span>Create</span> An Account</h1>
+        <h3>Username</h3>
+        <div>
+            <input type="text" placeholder="Username" bind:value={username} />
+        </div>
         <h3>Email</h3>
         <div><input type="text" placeholder="Email" bind:value={email} /></div>
         <h3>Password</h3>
         <div>
             <input type="text" placeholder="Password" bind:value={password} />
         </div>
-        <button on:click={login}>Login</button>
+        <h3>Bio</h3>
+        <div><input type="text" placeholder="Bio" bind:value={bio} /></div>
+        <h2>Profile Picture</h2>
+        <div><input type="file" /></div>
+        <button on:click={signUp}>Create</button>
     </form>
 </div>
 

@@ -14,7 +14,7 @@
 <slot />
 <style>
     .transition {
-        position: fixed;
+        position: relative;
         top: 0;
         left: 0;
         z-index: 6;
