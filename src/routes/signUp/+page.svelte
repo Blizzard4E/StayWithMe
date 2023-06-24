@@ -1,31 +1,45 @@
 <script>
     import { onMount } from "svelte";
     import { transitionState } from "../../store";
+    export let data;
 
-    let email,
-        password,
-        username,
-        bio,
-        profile_pic = "cat";
+    let email, password, username, bio, profile_pic;
+
+    async function generateImageLink() {}
 
     async function signUp() {
         console.log("Requesting");
-        const response = await fetch("../api/signUp", {
-            method: "POST",
-            body: JSON.stringify({
-                username: username,
-                email: email,
-                password: password,
-                bio: bio,
-                profile_pic: profile_pic,
-            }),
-        });
-        const data = await response.json();
-        if (data.status == 200) {
-            document.cookie = data.accessToken;
-            document.cookie = data.refreshToken;
-            console.log("Successful Sign Up");
-        }
+        let formData = new FormData();
+        console.log(profile_pic[0]);
+        formData.append("file", profile_pic[0]);
+        formData.append("upload_preset", data.preset_name);
+        formData.append("api_key", data.cloud_api_key);
+        fetch(
+            "https://api.cloudinary.com/v1_1/" + data.cloud_name + "/upload",
+            {
+                method: "POST",
+                body: formData,
+            }
+        )
+            .then((res) => res.json())
+            .then(async (image) => {
+                const response = await fetch("../api/users/signUp", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                        bio: bio,
+                        profile_pic: image.url,
+                    }),
+                });
+                const data = await response.json();
+                if (data.status == 200) {
+                    document.cookie = data.accessToken;
+                    document.cookie = data.refreshToken;
+                    console.log("Successful Sign Up");
+                }
+            });
     }
 
     onMount(() => {
@@ -49,7 +63,7 @@
         <h3>Bio</h3>
         <div><input type="text" placeholder="Bio" bind:value={bio} /></div>
         <h2>Profile Picture</h2>
-        <div><input type="file" /></div>
+        <div><input type="file" bind:files={profile_pic} /></div>
         <button on:click={signUp}>Create</button>
     </form>
 </div>

@@ -5,26 +5,46 @@
     import { transitionState } from "../store";
     import BackgroundStarsPink from "./BackgroundStarsPink.svelte";
     import ThreeDBackgroundVertical from "./ThreeDBackgroundVertical.svelte";
-    import { json } from "@sveltejs/kit";
+    import { user, hotel } from "../routes/stores";
+    import { page } from "$app/stores";
 
-    // async function autoLogin() {
-    //     let cookie = JSON.parse(`{\"${document.cookie.replace(/=/g,'\":\"').replace(/; /g,'\",\"')}\"}`);
-    //     const response = await fetch('http://0.tcp.ap.ngrok.io:17321/users/autoLogin', {method: 'POST'});
-    //     const jsonData = await response.json();
+    let userData;
+    let hotelData;
 
-    //     console.log(jsonData)
-
-    //     if(jsonData.status == 200) {
-    //         cookie = JSON.parse(`{\"${document.cookie.replace(/=/g,'\":\"').replace(/; /g,'\",\"')}\"}`);
-
-    //         let user = jwt_decode(cookie.accessToken)
-    //         console.log(user)
-    //     }
-    // }
-    onMount(() => {
-        /*!const response = await fetch('http://0.tcp.ap.ngrok.io:17321/users/autoLogin', {method: 'POST'});*/
-        //!const jsonData = await response.json();
+    user.subscribe((value) => {
+        userData = value;
     });
+    hotel.subscribe((value) => {
+        hotelData = value;
+    });
+
+    async function autoLogin() {
+        if (document.cookie.indexOf("refreshToken") < 0) {
+            goto("/login");
+            return;
+        }
+        const response = await fetch("../../api/autoLogin", {
+            method: "POST",
+        });
+        const data = await response.json();
+        if (data.status == 200) {
+            document.cookie = data.accessToken;
+            document.cookie = data.refreshToken;
+            console.log("Successful Login");
+            const userJWT = jwt_decode(data.accessToken);
+            user.update((value) => userJWT);
+        } else goto("/login");
+    }
+
+    onMount(() => {
+        if (
+            $page.url.pathname == "/signUp" ||
+            $page.url.pathname == "/createHotel"
+        )
+            return;
+        autoLogin();
+    });
+
     /**
      * @param {string | URL} path
      */
@@ -53,37 +73,41 @@
                 >E
             </h2>
         </div>
-        <div class="others">
-            <div class="links">
-                <a
-                    on:click={() => {
-                        transition("/login");
-                    }}>Login</a
-                >
-                <a
-                    on:click={() => {
-                        transition("/hotelManager");
-                    }}>Manage Hotel</a
-                >
-                <a
-                    on:click={() => {
-                        transition("/createHotel");
-                    }}>Create Hotel</a
-                >
-                <a
-                    on:click={() => {
-                        transition("/createUser");
-                    }}>Create Account</a
-                >
+        {#if userData}
+            <div class="others">
+                <div class="bell">
+                    <img src="/svg/bell.svg" alt="notification bell" />
+                </div>
+                <div class="profile">
+                    <h3>
+                        <span>{userData.username[0]}</span
+                        >{userData.username.substring(1)}
+                    </h3>
+                    <img src={userData.profile_pic} alt="" />
+                </div>
             </div>
-            <div class="bell">
-                <img src="/svg/bell.svg" alt="notification bell" />
+        {/if}
+        {#if hotelData}
+            <div class="others">
+                <div class="links">
+                    <a
+                        on:click={() => {
+                            transition("/hotelManager");
+                        }}>Manage Hotel</a
+                    >
+                </div>
+                <div class="bell">
+                    <img src="/svg/bell.svg" alt="notification bell" />
+                </div>
+                <div class="profile">
+                    <h3>
+                        <span>{userData.username[0]}</span
+                        >{userData.username.substring(1)}
+                    </h3>
+                    <img src={userData.profile_pic} alt="" />
+                </div>
             </div>
-            <div class="profile">
-                <h3><span>B</span>lizzard Einzbern</h3>
-                <img src="/images/profile.webp" alt="" />
-            </div>
-        </div>
+        {/if}
     </nav>
 </div>
 
