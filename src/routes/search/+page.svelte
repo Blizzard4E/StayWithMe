@@ -63,7 +63,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("http://localhost:3000/autoLogin", {
+                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -102,16 +102,19 @@
                     transition("/login");
                 });
                 if (tokenCheck) {
-                    fetch("http://localhost:3000/users/searchHotels", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            token: localStorage.getItem("access_token"),
-                            country: countryData,
-                        }),
-                    })
+                    fetch(
+                        "https://stay-withme-api.cyclic.app/users/searchHotels",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                token: localStorage.getItem("access_token"),
+                                country: countryData,
+                            }),
+                        }
+                    )
                         .then((res) => res.json())
                         .then((jsonData) => {
                             if (jsonData.status == 200) {
@@ -252,8 +255,11 @@
                                 <div>
                                     <h3>{hotel.name}</h3>
                                     <h4>Country: {hotel.country}</h4>
-                                    <h4>
-                                        Facilities: Swiming Pool, BBQ, Breakfast
+                                    <h4 class="benefits">
+                                        Benefits:
+                                        {#each hotel.benefits as benefit}
+                                            <span>{benefit}</span>
+                                        {/each}
                                     </h4>
                                 </div>
                                 <p>
@@ -322,6 +328,18 @@
         display: grid;
         grid-template-columns: 1fr 2fr;
     }
+    .benefits {
+        span {
+            &:first-child {
+                &::before {
+                    content: " ";
+                }
+            }
+            &::before {
+                content: ", ";
+            }
+        }
+    }
     ul {
         li {
             cursor: pointer;
@@ -363,7 +381,12 @@
                 font-size: 1rem;
                 font-weight: normal;
             }
-
+            p {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2; /* number of lines to show */
+                -webkit-box-orient: vertical;
+            }
             img {
                 width: 100%;
                 aspect-ratio: 1/1;

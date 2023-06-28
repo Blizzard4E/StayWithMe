@@ -59,7 +59,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("http://localhost:3000/autoLogin", {
+                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -94,7 +94,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("http://localhost:3000/hotels/update", {
+            fetch("https://stay-withme-api.cyclic.app/hotels/update", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

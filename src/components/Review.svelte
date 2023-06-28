@@ -3,6 +3,7 @@
     import jwt_decode from "jwt-decode";
     import { user } from "../routes/stores";
     import { onMount } from "svelte";
+    import Report from "./Report.svelte";
 
     let userData;
     let hotelReviews = [];
@@ -26,7 +27,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("http://localhost:3000/autoLogin", {
+                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -61,7 +62,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("http://localhost:3000/users/review", {
+            fetch("https://stay-withme-api.cyclic.app/users/review", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,7 +94,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("http://localhost:3000/users/getHotelReviews", {
+            fetch("https://stay-withme-api.cyclic.app/users/getHotelReviews", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -135,17 +136,33 @@
     <ul>
         {#each hotelReviews as review}
             <li>
-                <img class="profile" src={review.user_id.profile_pic} alt="" />
-                <div class="comment">
-                    <div class="review-stars">
-                        <h1>{review.user_id.username}</h1>
-                        {#each Array(review.ratings) as _, i}
-                            <img class="star" src="/images/star.png" alt="" />
-                        {/each}
+                <div class="review-wrap">
+                    <img
+                        class="profile"
+                        src={review.user_id.profile_pic}
+                        alt=""
+                    />
+                    <div class="comment">
+                        <div class="review-stars">
+                            <h1>{review.user_id.username}</h1>
+                            {#each Array(review.ratings) as _, i}
+                                <img
+                                    class="star"
+                                    src="/images/star.png"
+                                    alt=""
+                                />
+                            {/each}
+                        </div>
+                        <p>
+                            {review.feedback}
+                        </p>
                     </div>
-                    <p>
-                        {review.feedback}
-                    </p>
+                    <Report
+                        reviewData={{
+                            user_id: review.user_id.id,
+                            review_id: review.id,
+                        }}
+                    />
                 </div>
             </li>
         {/each}
@@ -260,8 +277,12 @@
             row-gap: 0.5rem;
             li {
                 display: flex;
+            }
+            .review-wrap {
+                display: flex;
                 align-items: flex-end;
                 column-gap: 0.5rem;
+                position: relative;
                 .profile {
                     border: 2px solid $pink2;
                     width: 52px;
@@ -292,6 +313,7 @@
                     margin-bottom: 0.5rem;
                 }
                 p {
+                    line-break: auto;
                     color: white;
                     font-size: 0.9rem;
                 }

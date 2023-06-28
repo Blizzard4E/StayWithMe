@@ -90,7 +90,7 @@
         console.log("Requesting");
         const uploadedImages = await uploadImages();
 
-        fetch("http://localhost:3000/hotels/signUp", {
+        fetch("https://stay-withme-api.cyclic.app/hotels/signUp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

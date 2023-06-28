@@ -36,7 +36,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("http://localhost:3000/autoLogin", {
+                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -71,7 +71,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("http://localhost:3000/hotels/checkOut", {
+            fetch("https://stay-withme-api.cyclic.app/hotels/checkOut", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -114,7 +114,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("http://localhost:3000/hotels/onGoing", {
+            fetch("https://stay-withme-api.cyclic.app/hotels/onGoing", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -142,7 +142,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("http://localhost:3000/hotels/getRooms", {
+            fetch("https://stay-withme-api.cyclic.app/hotels/getRooms", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -178,7 +178,7 @@
                 hotel_id: hotelData.id,
                 token: localStorage.getItem("access_token"),
             };
-            fetch("http://localhost:3000/hotels/createRoom", {
+            fetch("https://stay-withme-api.cyclic.app/hotels/createRoom", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -201,7 +201,7 @@
         });
         if (tokenCheck) {
             let token = localStorage.getItem("access_token");
-            fetch("http://localhost:3000/hotels/removeRoom", {
+            fetch("https://stay-withme-api.cyclic.app/hotels/removeRoom", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -23,7 +23,7 @@
             .then((res) => res.json())
             .then(async (image) => {
                 console.log("Uploaded Profile");
-                fetch("http://localhost:3000/users/signUp", {
+                fetch("https://stay-withme-api.cyclic.app/users/signUp", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

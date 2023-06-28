@@ -11,13 +11,17 @@ function splitCookies(cookieString) {
 }
 
 export async function POST({ request }) {
-    const response = await fetch("http://localhost:3000/users/hotels", {
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-            cookie: splitCookies(request.headers.get("cookie")).refreshToken,
-        },
-    });
+    const response = await fetch(
+        "https://stay-withme-api.cyclic.app/users/hotels",
+        {
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                cookie: splitCookies(request.headers.get("cookie"))
+                    .refreshToken,
+            },
+        }
+    );
     const jsonData = await response.json();
     return json(jsonData);
 }

@@ -16,26 +16,32 @@ export async function POST({ request }) {
     let response;
     if (data.is_user) {
         console.log("logging in as user");
-        response = await fetch("http://localhost:3000/users/autoLogin", {
-            credentials: "include",
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                cookie: splitCookies(request.headers.get("cookie"))
-                    .refreshToken,
-            },
-        });
+        response = await fetch(
+            "https://stay-withme-api.cyclic.app/users/autoLogin",
+            {
+                credentials: "include",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    cookie: splitCookies(request.headers.get("cookie"))
+                        .refreshToken,
+                },
+            }
+        );
     } else {
         console.log("logging in as hotel");
-        response = await fetch("http://localhost:3000/hotels/autoLogin", {
-            credentials: "include",
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                cookie: splitCookies(request.headers.get("cookie"))
-                    .refreshToken,
-            },
-        });
+        response = await fetch(
+            "https://stay-withme-api.cyclic.app/hotels/autoLogin",
+            {
+                credentials: "include",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    cookie: splitCookies(request.headers.get("cookie"))
+                        .refreshToken,
+                },
+            }
+        );
     }
 
     const jsonData = await response.json();

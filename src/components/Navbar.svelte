@@ -27,7 +27,7 @@
             return;
         }
         let myToken = localStorage.getItem("refresh_token");
-        fetch("http://localhost:3000/autoLogin", {
+        fetch("https://stay-withme-api.cyclic.app/autoLogin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -118,6 +118,13 @@
         {/if}
         {#if userData}
             <div class="others">
+                <a
+                    on:click={() => {
+                        if ($page.url.pathname != "/search")
+                            transition("/search");
+                        console.log($page.url.pathname);
+                    }}>Search</a
+                >
                 <a
                     on:click={() => {
                         if ($page.url.pathname != "/home") transition("/home");

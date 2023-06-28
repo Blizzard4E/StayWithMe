@@ -33,7 +33,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("http://localhost:3000/autoLogin", {
+                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -75,7 +75,7 @@
                 transition("/login");
             });
             if (tokenCheck) {
-                fetch("http://localhost:3000/users/getInfo", {
+                fetch("https://stay-withme-api.cyclic.app/users/getInfo", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -133,7 +133,7 @@
                 const profileImgLink = await uploadImage().catch((err) => {
                     return console.log(err);
                 });
-                fetch("http://localhost:3000/users/update", {
+                fetch("https://stay-withme-api.cyclic.app/users/update", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

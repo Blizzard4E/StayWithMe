@@ -3,6 +3,11 @@
     import { onMount } from "svelte";
     import { transitionState } from "../store";
     import jwt_decode from "jwt-decode";
+    import { user } from "../routes/stores";
+
+    let userData;
+
+    user.subscribe((value) => (userData = value));
 
     let hotels = [];
 
@@ -18,7 +23,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("http://localhost:3000/autoLogin", {
+                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -54,7 +59,7 @@
         });
         if (tokenCheck) {
             const response = await fetch(
-                "http://localhost:3000/users/getHotels",
+                "https://stay-withme-api.cyclic.app/users/getHotels",
                 {
                     method: "POST",
                     headers: {
