@@ -5,64 +5,50 @@
 
     let email = "",
         password = "",
-        isUser = true,
         failed = false;
 
     async function login() {
-        console.log("Requesting");
-        let data;
-        if (email.length == 0 || password.length == 0) {
-            failed = true;
-            return;
-        }
-        if (isUser) {
-            const response = await fetch("../api/users/login", {
-                method: "POST",
-                body: JSON.stringify({ email: email, password: password }),
-            });
-            data = await response.json();
-        } else {
-            const response = await fetch("../api/hotels/login", {
-                method: "POST",
-                body: JSON.stringify({ email: email, password: password }),
-            });
-            data = await response.json();
-        }
-        if (data.status == 200) {
-            document.cookie = data.accessToken;
-            document.cookie = data.refreshToken;
-            goto("/home");
-        } else failed = true;
-    }
-
-    function changeRole() {
-        isUser = !isUser;
+        fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: email, password: password }),
+        })
+            .then(async (res) => {
+                const jsonData = await res.json();
+                if (jsonData.status == 200) {
+                    localStorage.setItem("access_token", jsonData.accessToken);
+                    localStorage.setItem(
+                        "refresh_token",
+                        jsonData.refreshToken
+                    );
+                    transition("/home");
+                } else failed = true;
+                console.log(jsonData);
+            })
+            .catch((error) => console.error("Error:", error));
     }
 
     onMount(() => {
         transitionState.update((state) => 0);
     });
+    function transition(path) {
+        transitionState.update((state) => 1);
+        setTimeout(() => {
+            goto(path);
+        }, 1000);
+    }
 </script>
 
 <div class="container">
     <form>
         <h1><span>L</span>ogin</h1>
-        <div class="role">
-            <button on:click={changeRole} disabled={isUser}>User</button>
-            <button on:click={changeRole} disabled={!isUser}>Hotel</button>
-        </div>
         <h3>Email</h3>
         <div><input type="text" placeholder="Email" bind:value={email} /></div>
         <h3>Password</h3>
         <div>
             <input type="text" placeholder="Password" bind:value={password} />
-        </div>
-        <div class="signUp">
-            {#if isUser}
-                <a href="../signUp">Don't have an account?</a>
-            {:else}
-                <a href="../createHotel">Don't have a hotel?</a>
-            {/if}
         </div>
         {#if failed}
             <p class="fail">Wrong Email or Password</p>
@@ -89,17 +75,6 @@
                 background: none;
             }
         }
-    }
-    .signUp {
-        padding-top: 1rem;
-    }
-    .signUp a {
-        background: none;
-        color: black;
-        font-weight: normal;
-        padding: 0;
-        cursor: pointer;
-        font-size: 1rem;
     }
     .container {
         display: grid;

@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { transitionState } from "../../store";
+    import { goto } from "$app/navigation";
     export let data;
 
     let email, password, username, bio, profile_pic;
@@ -8,9 +9,7 @@
     async function generateImageLink() {}
 
     async function signUp() {
-        console.log("Requesting");
         let formData = new FormData();
-        console.log(profile_pic[0]);
         formData.append("file", profile_pic[0]);
         formData.append("upload_preset", data.preset_name);
         formData.append("api_key", data.cloud_api_key);
@@ -23,8 +22,12 @@
         )
             .then((res) => res.json())
             .then(async (image) => {
-                const response = await fetch("../api/users/signUp", {
+                console.log("Uploaded Profile");
+                fetch("http://localhost:3000/users/signUp", {
                     method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     body: JSON.stringify({
                         username: username,
                         email: email,
@@ -32,14 +35,25 @@
                         bio: bio,
                         profile_pic: image.url,
                     }),
-                });
-                const data = await response.json();
-                if (data.status == 200) {
-                    document.cookie = data.accessToken;
-                    document.cookie = data.refreshToken;
-                    console.log("Successful Sign Up");
-                }
-            });
+                })
+                    .then(async (res) => {
+                        const jsonData = await res.json();
+                        if (jsonData.status == 200) {
+                            localStorage.setItem(
+                                "access_token",
+                                jsonData.accessToken
+                            );
+                            localStorage.setItem(
+                                "refresh_token",
+                                jsonData.refreshToken
+                            );
+                            transition("/home");
+                        } else failed = true;
+                        console.log(jsonData);
+                    })
+                    .catch((error) => console.error("Error:", error));
+            })
+            .catch((err) => console.log(err));
     }
 
     onMount(() => {

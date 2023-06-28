@@ -24,7 +24,7 @@
      * @type {HTMLDivElement}
      */
     let scene;
-    const starCount = 30    ;
+    const starCount = 30;
     const maxStarSize = 50;
     const minStarSize = 10;
     const maxBlinkSpeed = 0.7;
@@ -32,34 +32,38 @@
     /**
      * @type {Array.<TwinkleStar>}
      */
-    let twinkleStars = []
+    let twinkleStars = [];
     onMount(() => {
         do {
             let starType = Math.round(Math.random() * 1);
             let posX = Math.random() * 100;
             let posY = Math.random() * 100;
-            let size = Math.random() * (maxStarSize - minStarSize) + minStarSize;
-            let blinkSpeed = Math.random() * (maxBlinkSpeed - minBlinkSpeed) + minBlinkSpeed;
+            let size =
+                Math.random() * (maxStarSize - minStarSize) + minStarSize;
+            let blinkSpeed =
+                Math.random() * (maxBlinkSpeed - minBlinkSpeed) + minBlinkSpeed;
             let canPass = false;
             for (let i = 0; i < twinkleStars.length; i++) {
-                if(Math.abs(posX - twinkleStars[i].x) >= 20) canPass = true;
-                else if(Math.abs(posY - twinkleStars[i].y) >= 20) canPass = true;
-                if(canPass) break;
+                if (Math.abs(posX - twinkleStars[i].x) >= 20) canPass = true;
+                else if (Math.abs(posY - twinkleStars[i].y) >= 20)
+                    canPass = true;
+                if (canPass) break;
             }
-            if(!canPass && twinkleStars.length != 0) continue;
-            let newStar = new TwinkleStar(posX,posY,size);
+            if (!canPass && twinkleStars.length != 0) continue;
+            let newStar = new TwinkleStar(posX, posY, size);
             twinkleStars.push(newStar);
-            if(twinkleStars.length == 0) twinkleStars.push(new TwinkleStar(posX,posY,size));
-            scene.innerHTML += `<img src='./svg/star_${starType}.svg' alt='Star in background' style='top:${posX}%;left:${posY}%;width:${size}px;position: fixed;
+            if (twinkleStars.length == 0)
+                twinkleStars.push(new TwinkleStar(posX, posY, size));
+            scene.innerHTML += `<img src='../svg/star_${starType}.svg' alt='Star in background' style='top:${posX}%;left:${posY}%;width:${size}px;position: fixed;
             filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(103%) contrast(101%);
             animation: starAnimation;
             animation-iteration-count: infinite;
             animation-duration:${blinkSpeed}s;
             animation-delay: 1s;
             '>`;
-        } while(twinkleStars.length < starCount)
-        console.log(twinkleStars);
-    })
+        } while (twinkleStars.length < starCount);
+        // console.log(twinkleStars);
+    });
 </script>
 
 <div class="scene" bind:this={scene}>
@@ -103,7 +107,6 @@
         user-select: none;
 
         img {
-            
         }
         #group-1 {
             position: fixed;
@@ -132,25 +135,65 @@
         }
     }
     @keyframes starAnimation1 {
-        0%   { transform: scale(1.2); }
-        9%   { transform: scale(1.2); }
-        10%   { transform: scale(1.1); }
-        19%   { transform: scale(1.1); }
-        20%  { transform: scale(1.3); }
-        29%  { transform: scale(1.3); }
-        30%   { transform: scale(1.2); }
-        39% { transform: scale(1.2); }
-        40%   { transform: scale(1.3); }
-        45%   { transform: scale(1.3); }
-        50%  { transform: scale(1.2); }
-        55%  { transform: scale(1.2); }
-        60% { transform: scale(1.2); }
-        69% { transform: scale(1.2); }
-        70% { transform: scale(1.1); }
-        75% { transform: scale(1.1); }
-        80% { transform: scale(1.2); }
-        89% { transform: scale(1.2); }
-        90% { transform: scale(1.3); }
-        99% { transform: scale(1.3); }
+        0% {
+            transform: scale(1.2);
+        }
+        9% {
+            transform: scale(1.2);
+        }
+        10% {
+            transform: scale(1.1);
+        }
+        19% {
+            transform: scale(1.1);
+        }
+        20% {
+            transform: scale(1.3);
+        }
+        29% {
+            transform: scale(1.3);
+        }
+        30% {
+            transform: scale(1.2);
+        }
+        39% {
+            transform: scale(1.2);
+        }
+        40% {
+            transform: scale(1.3);
+        }
+        45% {
+            transform: scale(1.3);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        55% {
+            transform: scale(1.2);
+        }
+        60% {
+            transform: scale(1.2);
+        }
+        69% {
+            transform: scale(1.2);
+        }
+        70% {
+            transform: scale(1.1);
+        }
+        75% {
+            transform: scale(1.1);
+        }
+        80% {
+            transform: scale(1.2);
+        }
+        89% {
+            transform: scale(1.2);
+        }
+        90% {
+            transform: scale(1.3);
+        }
+        99% {
+            transform: scale(1.3);
+        }
     }
 </style>

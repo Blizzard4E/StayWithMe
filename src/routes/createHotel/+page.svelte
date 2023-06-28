@@ -1,12 +1,46 @@
 <script>
     import { onMount } from "svelte";
     import { transitionState } from "../../store";
+    import { goto } from "$app/navigation";
     export let data;
+
+    const countries = [
+        "Bangladesh",
+        "Brazil",
+        "Cambodia",
+        "China",
+        "Colombia",
+        "Egypt",
+        "France",
+        "Germany",
+        "India",
+        "Indonesia",
+        "Iran",
+        "Italy",
+        "Japan",
+        "Laos",
+        "Malaysia",
+        "Mexico",
+        "Myanmar",
+        "Nigeria",
+        "Pakistan",
+        "Philippines",
+        "Russia",
+        "Singapore",
+        "South Africa",
+        "South Korea",
+        "Thailand",
+        "Turkey",
+        "United Kingdom",
+        "United States",
+        "Vietnam",
+    ];
+
     let name = "",
         email = "",
         password = "",
         description = "",
-        location = "",
+        country = "Cambodia",
         googleMap = "",
         cover_img,
         img_1,
@@ -56,29 +90,45 @@
         console.log("Requesting");
         const uploadedImages = await uploadImages();
 
-        const response = await fetch("../api/hotels/signUp", {
+        fetch("http://localhost:3000/hotels/signUp", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 name: name,
                 email: email,
                 password: password,
                 description: description,
-                location: location,
+                country: country,
                 googleMap: googleMap,
                 images: uploadedImages,
             }),
-        });
-        const data = await response.json();
-        if (data.status == 200) {
-            document.cookie = data.accessToken;
-            document.cookie = data.refreshToken;
-        }
-        console.log(data.message);
+        })
+            .then(async (res) => {
+                const jsonData = await res.json();
+                if (jsonData.status == 200) {
+                    localStorage.setItem("access_token", jsonData.accessToken);
+                    localStorage.setItem(
+                        "refresh_token",
+                        jsonData.refreshToken
+                    );
+                    transition("/home");
+                } else failed = true;
+                console.log(jsonData);
+            })
+            .catch((error) => console.error("Error:", error));
     }
 
     onMount(() => {
         transitionState.update((state) => 0);
     });
+    function transition(path) {
+        transitionState.update((state) => 1);
+        setTimeout(() => {
+            goto(path);
+        }, 1000);
+    }
 </script>
 
 <div class="container">
@@ -100,18 +150,32 @@
                 bind:value={description}
             />
         </div>
-        <h3>Location</h3>
-        <div>
-            <input type="text" placeholder="Location" bind:value={location} />
-        </div>
+        <h3>Country</h3>
+        <label for="country">Country:</label>
+        <select bind:value={country}>
+            {#each countries as country_}
+                <option value={country_}>{country_}</option>
+            {/each}
+        </select>
         <h3>Google Map Name Optional</h3>
-        <div>
+        <div style="margin-bottom: 1rem;">
             <input
                 type="text"
                 placeholder="Google Map Link"
                 bind:value={googleMap}
             />
         </div>
+        <iframe
+            src={"https://maps.google.com/maps?&q=" +
+                encodeURIComponent(googleMap) +
+                "&output=embed"}
+            width="100%"
+            height="200"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+        />
         <h3>Cover Image</h3>
         <div><input type="file" bind:files={cover_img} /></div>
         <h3>Image 1</h3>

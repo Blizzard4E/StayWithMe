@@ -6,50 +6,103 @@
     import BackgroundStarsPink from "../../components/BackgroundStarsPink.svelte";
     import NewHotels from "../../components/NewHotels.svelte";
     import { goto } from "$app/navigation";
+    import Manager from "../../components/Manager.svelte";
+    import { user, hotel, country } from "../stores";
 
     export let data;
-    console.log(data);
-    
-    onMount(() => {
-        transitionState.update(state => 0);
-    })
-    function country() {
-        transitionState.update(state => 1);
+
+    let userData;
+    let hotelData;
+
+    user.subscribe((value) => {
+        userData = value;
+    });
+    hotel.subscribe((value) => {
+        hotelData = value;
+    });
+
+    function searchByCountry(countryName) {
+        country.update((value) => countryName);
+        transition("/search");
+    }
+
+    onMount(async () => {
+        transitionState.update((state) => 0);
+    });
+    function transition(path) {
+        transitionState.update((state) => 1);
         setTimeout(() => {
-            goto('/country');
+            goto(path);
         }, 1000);
     }
 </script>
-<div class="container">
-    <h1><span>Top</span> Places</h1>
-    <div class="grid-1">
-        <div class="main" on:click={country}>
-            <div class="img" style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_0.jpg');background-position:center;background-size:cover;"></div>
-            <h2>Cambodia</h2>
-            <div class="detail">
+
+{#if userData}
+    <div class="container">
+        <h1><span>Top</span> Places</h1>
+        <div class="grid-1">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div class="main" on:click={() => searchByCountry("Cambodia")}>
+                <div
+                    class="img"
+                    style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_0.jpg');background-position:center;background-size:cover;"
+                />
                 <h2>Cambodia</h2>
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo, molestiae ab iure praesentium vitae veniam eum saepe ex quia vel. Dolorum incidunt quidem molestias vitae aliquam et ipsam facere officiis.</p>
+                <div class="detail">
+                    <h2>Cambodia</h2>
+                    <p>
+                        Cambodia is a country that is known for its rich
+                        history, stunning temples, and beautiful beaches. The
+                        country is home to many ancient temples, including the
+                        famous Angkor Wat temple complex.
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="side-1" on:click={country}>
-            <div class="img" style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.2)), url('/placeholder_1.jpg');background-position:center;background-size:cover;"></div>
-            <h2>France</h2>
-            <div class="detail">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div class="side-1" on:click={() => searchByCountry("France")}>
+                <div
+                    class="img"
+                    style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.2)), url('/placeholder_1.jpg');background-position:center;background-size:cover;"
+                />
                 <h2>France</h2>
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo, molestiae ab iure praesentium vitae veniam eum saepe ex quia vel.</p>
+                <div class="detail">
+                    <h2>France</h2>
+                    <p>
+                        France is a country located in Western Europe that is
+                        known for its rich history, stunning architecture, and
+                        world-class cuisine.
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="side-2" on:click={country}>
-            <div class="img" style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_2.jpg');background-position:center;background-size:cover;"></div>
-            <h2>United States</h2>
-            <div class="detail">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div
+                class="side-2"
+                on:click={() => searchByCountry("United States")}
+            >
+                <div
+                    class="img"
+                    style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_2.jpg');background-position:center;background-size:cover;"
+                />
                 <h2>United States</h2>
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo, molestiae ab iure praesentium vitae veniam eum saepe ex quia vel. </p>
+                <div class="detail">
+                    <h2>United States</h2>
+                    <p>
+                        The United States is a country located in North America
+                        that is known for its diverse culture, stunning natural
+                        beauty, and world-class cities.
+                    </p>
+                </div>
             </div>
         </div>
+        <NewHotels />
     </div>
-    <NewHotels/>
-</div>
+{/if}
+{#if hotelData}
+    <div class="container">
+        <Manager {data} />
+    </div>
+{/if}
+
 <style lang="scss">
     .container {
         position: relative;
@@ -60,8 +113,11 @@
     h1 {
         font-size: 1.7rem;
     }
-    h1,h2,h3,p {
-        font-family: 'Poppins', sans-serif;
+    h1,
+    h2,
+    h3,
+    p {
+        font-family: "Poppins", sans-serif;
         span {
             color: $pink2;
         }
@@ -79,7 +135,8 @@
             "main main side-2";
         column-gap: 1rem;
         row-gap: 1rem;
-        .side-2,.side-1 {
+        .side-2,
+        .side-1 {
             &:hover {
                 .detail {
                     transition: 0.15s ease-in-out;
@@ -94,10 +151,10 @@
                 left: 0;
                 width: 100%;
                 height: 50%;
-                padding: .5rem;
+                padding: 0.5rem;
                 p {
                     color: white;
-                    font-size: .9rem;
+                    font-size: 0.9rem;
                 }
                 h2 {
                     left: 0;
@@ -106,7 +163,9 @@
                 }
             }
         }
-        .main,.side-1,.side-2 {
+        .main,
+        .side-1,
+        .side-2 {
             position: relative;
             overflow: hidden;
             cursor: pointer;
@@ -117,9 +176,9 @@
                 transition: 0.2s ease-in-out;
                 transform: translateZ(0);
                 /* antialiasing */
-                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
                 will-change: transform;
-                -webkit-perspective: 1000;
+                perspective: 1000;
                 transition: 0.15s ease-out;
             }
             &:hover {
@@ -147,7 +206,7 @@
                 padding: 1rem;
                 p {
                     color: white;
-                    font-size: .9rem;
+                    font-size: 0.9rem;
                 }
                 h2 {
                     left: 0;
@@ -168,8 +227,8 @@
             h2 {
                 color: white;
                 position: absolute;
-                bottom: .5rem;
-                left: .5rem;
+                bottom: 0.5rem;
+                left: 0.5rem;
             }
         }
         .side-2 {
@@ -178,11 +237,9 @@
             h2 {
                 color: white;
                 position: absolute;
-                bottom: .5rem;
-                left: .5rem;
+                bottom: 0.5rem;
+                left: 0.5rem;
             }
         }
     }
-    
-
 </style>

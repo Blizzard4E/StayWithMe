@@ -19,24 +19,49 @@
     });
 
     async function autoLogin() {
-        if (document.cookie.indexOf("refreshToken") < 0) {
-            goto("/login");
+        if (!localStorage.getItem("refresh_token")) {
+            console.log("No refresh Token");
+            user.update((value) => null);
+            hotel.update((value) => null);
+            transition("/login");
             return;
         }
-        const response = await fetch("../../api/autoLogin", {
+        let myToken = localStorage.getItem("refresh_token");
+        fetch("http://localhost:3000/autoLogin", {
             method: "POST",
-        });
-        const data = await response.json();
-        if (data.status == 200) {
-            document.cookie = data.accessToken;
-            document.cookie = data.refreshToken;
-            console.log("Successful Login");
-            const userJWT = jwt_decode(data.accessToken);
-            user.update((value) => userJWT);
-        } else goto("/login");
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token: myToken }),
+        })
+            .then(async (res) => {
+                const jsonData = await res.json();
+                if (jsonData.status == 200) {
+                    localStorage.setItem("access_token", jsonData.accessToken);
+                    console.log("Successful auto login");
+                    let decoded = jwt_decode(jsonData.accessToken);
+                    if (decoded.hasOwnProperty("username")) {
+                        user.update((value) => decoded);
+                    } else {
+                        hotel.update((value) => decoded);
+                    }
+                }
+                console.log(jsonData);
+            })
+            .catch((error) => console.error("Error:", error));
     }
 
     onMount(() => {
+        if (document.cookie.indexOf("refreshToken") >= 0) {
+            const token = ("; " + document.cookie)
+                .split(`; refreshToken=`)
+                .pop()
+                .split(";")[0];
+            const decodedToken = jwt_decode(token);
+            if (decodedToken.is_user) {
+                is_user.update((value) => true);
+            } else is_user.update((value) => false);
+        }
         if (
             $page.url.pathname == "/signUp" ||
             $page.url.pathname == "/createHotel"
@@ -73,12 +98,40 @@
                 >E
             </h2>
         </div>
+        {#if !userData && !hotelData}
+            <div class="signUp">
+                <a
+                    on:click={() => {
+                        if ($page.url.pathname != "/signUp")
+                            transition("/signUp");
+                        console.log($page.url.pathname);
+                    }}>Create User Account</a
+                >
+                <a
+                    on:click={() => {
+                        if ($page.url.pathname != "/createHotel")
+                            transition("/createHotel");
+                        console.log($page.url.pathname);
+                    }}>Create Hotel Account</a
+                >
+            </div>
+        {/if}
         {#if userData}
             <div class="others">
-                <div class="bell">
-                    <img src="/svg/bell.svg" alt="notification bell" />
-                </div>
-                <div class="profile">
+                <a
+                    on:click={() => {
+                        if ($page.url.pathname != "/home") transition("/home");
+                        console.log($page.url.pathname);
+                    }}>Home</a
+                >
+                <div
+                    class="profile"
+                    on:click={() => {
+                        if ($page.url.pathname != "/profile")
+                            transition("/profile");
+                        console.log($page.url.pathname);
+                    }}
+                >
                     <h3>
                         <span>{userData.username[0]}</span
                         >{userData.username.substring(1)}
@@ -89,22 +142,12 @@
         {/if}
         {#if hotelData}
             <div class="others">
-                <div class="links">
-                    <a
-                        on:click={() => {
-                            transition("/hotelManager");
-                        }}>Manage Hotel</a
-                    >
-                </div>
-                <div class="bell">
-                    <img src="/svg/bell.svg" alt="notification bell" />
-                </div>
                 <div class="profile">
                     <h3>
-                        <span>{userData.username[0]}</span
-                        >{userData.username.substring(1)}
+                        <span>{hotelData.name[0]}</span
+                        >{hotelData.name.substring(1)}
                     </h3>
-                    <img src={userData.profile_pic} alt="" />
+                    <img src={hotelData.images[4]} alt="" />
                 </div>
             </div>
         {/if}
@@ -112,6 +155,17 @@
 </div>
 
 <style lang="scss">
+    .signUp {
+        display: flex;
+    }
+    .signUp a {
+        background: none;
+        color: black;
+        font-weight: normal;
+        padding: 0;
+        cursor: pointer;
+        font-size: 1rem;
+    }
     .objects {
         position: relative;
         z-index: 0;

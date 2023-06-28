@@ -1,6 +1,78 @@
 <script>
     import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
     import { transitionState } from "../store";
+    import jwt_decode from "jwt-decode";
+
+    let hotels = [];
+
+    async function checkToken() {
+        let decodedToken = jwt_decode(localStorage.getItem("access_token"));
+        return new Promise((resolve, reject) => {
+            if (Date.now() >= decodedToken.exp * 1000) {
+                if (!localStorage.getItem("refresh_token")) {
+                    console.log("No refresh Token");
+                    user.update((value) => null);
+                    hotel.update((value) => null);
+                    transition("/login");
+                    return;
+                }
+                let myToken = localStorage.getItem("refresh_token");
+                fetch("http://localhost:3000/autoLogin", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ token: myToken }),
+                })
+                    .then(async (res) => {
+                        const jsonData = await res.json();
+                        if (jsonData.status == 200) {
+                            localStorage.setItem(
+                                "access_token",
+                                jsonData.accessToken
+                            );
+                            console.log("Successful refresh access token");
+                            let decoded = jwt_decode(jsonData.accessToken);
+                            user.update((value) => decoded);
+                            resolve(true);
+                        } else reject({ status: 401 });
+                        console.log(jsonData);
+                    })
+                    .catch((error) => console.error("Error:", error));
+            } else {
+                resolve(true);
+            }
+        });
+    }
+
+    onMount(async () => {
+        const tokenCheck = await checkToken().catch((err) => {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            transition("/login");
+        });
+        if (tokenCheck) {
+            const response = await fetch(
+                "http://localhost:3000/users/getHotels",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        token: localStorage.getItem("access_token"),
+                    }),
+                }
+            );
+            const jsonData = await response.json();
+
+            if (jsonData.status == 200) {
+                hotels = jsonData.data;
+            }
+            console.log(jsonData);
+        }
+    });
 
     let currentPos = 0;
     function nextSlide() {
@@ -9,43 +81,52 @@
     function prevSlide() {
         currentPos += 20;
     }
-    function hotel() {
-        transitionState.update(state => 1);
+    function transition(path) {
+        transitionState.update((state) => 1);
         setTimeout(() => {
-            goto('/hotel');
+            goto(path);
         }, 1000);
     }
 </script>
 
 <h1><span>New</span> Hotels</h1>
 <section>
-    <button class="arrow left-arrow {currentPos ===  0? 'hide' : ''}" on:click={prevSlide}>
-        <img src="/svg/left_arrow.svg" alt="">
+    <button
+        class="arrow left-arrow {currentPos === 0 ? 'hide' : ''}"
+        on:click={prevSlide}
+    >
+        <img src="/svg/left_arrow.svg" alt="" />
     </button>
-    <button class="arrow right-arrow {currentPos ===  -100? 'hide' : ''}" on:click={nextSlide}>
-        <img src="/svg/right_arrow.svg" alt="">
+    <button
+        class="arrow right-arrow {currentPos === -(20 * (hotels.length - 5)) ||
+        hotels.length < 5
+            ? 'hide'
+            : ''}"
+        on:click={nextSlide}
+    >
+        <img src="/svg/right_arrow.svg" alt="" />
     </button>
     <div class="slide-container">
         <ul style="transform: translateX({currentPos}%)">
-            {#each Array(10) as _, i}
-            <li on:click={() => hotel()}>
-                <div class="cover">
-                    <img src="/placeholder_3.jpg" alt="">
-                </div>
-                <div class="info">
-                    <h2>Hotel 1</h2>
-                    <div class="rating">
-                        <h3>4.2</h3>
-                        <img src="/images/star.png" alt="Star Rating">
+            {#each hotels as hotel}
+                <li on:click={() => transition("/hotel/" + hotel.id)}>
+                    <div class="cover">
+                        <img src={hotel.images[4]} alt="" />
                     </div>
-                </div>
-                <p>Cambodia</p>
-            </li>
+                    <div class="info">
+                        <h2>{hotel.name}</h2>
+                        <div class="rating">
+                            <h3>{hotel.ratings}</h3>
+                            <img src="/images/star.png" alt="Star Rating" />
+                        </div>
+                    </div>
+                    <p>{hotel.country}</p>
+                </li>
             {/each}
         </ul>
     </div>
 </section>
-    
+
 <style lang="scss">
     .hide {
         display: none;
@@ -53,8 +134,11 @@
     section {
         position: relative;
     }
-    h1,h2,h3,p {
-        font-family: 'Poppins', sans-serif;
+    h1,
+    h2,
+    h3,
+    p {
+        font-family: "Poppins", sans-serif;
         span {
             color: $pink2;
         }
@@ -70,9 +154,10 @@
         padding: 0;
         background: none;
         cursor: pointer;
-        
+
         img {
-            filter: invert(70%) sepia(89%) saturate(4718%) hue-rotate(301deg) brightness(100%) contrast(106%);
+            filter: invert(70%) sepia(89%) saturate(4718%) hue-rotate(301deg)
+                brightness(100%) contrast(106%);
             width: 30px;
             transition: 0.15s ease-in-out;
         }
@@ -99,7 +184,7 @@
         transition: 0.15s ease-in-out;
         li {
             flex-shrink: 0;
-            width: calc((100%)/5);
+            width: calc((100%) / 5);
             transition: 0.15s ease-out;
             padding: 1rem;
             cursor: pointer;
@@ -108,11 +193,13 @@
             }
             &:hover {
                 background-color: $pink2;
-                .cover img{
-                    transform: scale(.9);
+                .cover img {
+                    transform: scale(0.9);
                     transition: 0.2s ease-out;
                 }
-                h2,h3,p {
+                h2,
+                h3,
+                p {
                     color: white;
                     transition: 0.15s ease-in-out;
                 }
@@ -121,16 +208,16 @@
             .info {
                 margin-top: 0.25rem;
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                align-items: center;
+                grid-template-columns: 5fr 1fr;
                 h2 {
-                    font-size: 1.2rem;
-                    line-height: 1rem;
+                    font-size: 1.1rem;
+                    line-height: 1.2rem;
                 }
                 img {
                     margin-top: 0.1rem;
-                    width: 1.2rem;
-                    height: 1.2rem;
+                    width: 1.1rem;
+                    height: 1.1rem;
+                    transform: translateY(-2px);
                 }
                 h3 {
                     margin-right: 0.25rem;
@@ -138,16 +225,17 @@
                 }
                 .rating {
                     display: flex;
-                    align-self: center;
                     justify-content: flex-end;
                 }
             }
             p {
                 font-size: 0.9rem;
             }
-            
+
             img {
                 width: 100%;
+                aspect-ratio: 1/1;
+                object-fit: cover;
             }
         }
     }

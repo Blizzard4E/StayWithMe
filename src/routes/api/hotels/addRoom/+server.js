@@ -13,7 +13,7 @@ function splitCookies(cookieString) {
 export async function POST({ request }) {
     let data = await request.json();
     console.log(data);
-    const response = await fetch("http://localhost:3000/users/login", {
+    const response = await fetch("http://localhost:3000/hotels/addRoom", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -21,8 +21,12 @@ export async function POST({ request }) {
         },
     });
     const jsonData = await response.json();
+    const resLogin = await fetch("../../api/autoLogin", {
+        method: "POST",
+        body: JSON.stringify({ is_user: isUser }),
+    });
     if (jsonData.status == 200) {
-        const returnCookies = splitCookies(response.headers.get("set-cookie"));
+        const returnCookies = splitCookies(resLogin.headers.get("set-cookie"));
         jsonData.accessToken = returnCookies.accessToken;
         jsonData.refreshToken = returnCookies.refreshToken;
     }
