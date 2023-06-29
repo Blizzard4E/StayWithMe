@@ -184,103 +184,111 @@
     }
 </script>
 
-<div class="container">
-    <div class="grid">
-        <div class="filter">
-            <h2>Sort By</h2>
-            <h3>Name</h3>
-            <div>
-                <button
-                    class:active={alphabetical}
-                    on:click={() => {
-                        turnOffFilters();
-                        alphabetical = true;
-                        applyFilter();
-                    }}>A-Z</button
-                >
-                <button
-                    class:active={notAlphabetical}
-                    on:click={() => {
-                        turnOffFilters();
-                        notAlphabetical = true;
-                        applyFilter();
-                    }}>Z-A</button
-                >
+<div class="main-bg">
+    <div class="container">
+        <div class="grid">
+            <div class="filter">
+                <h2>Sort By</h2>
+                <h3>Name</h3>
+                <div>
+                    <button
+                        class:active={alphabetical}
+                        on:click={() => {
+                            turnOffFilters();
+                            alphabetical = true;
+                            applyFilter();
+                        }}>A-Z</button
+                    >
+                    <button
+                        class:active={notAlphabetical}
+                        on:click={() => {
+                            turnOffFilters();
+                            notAlphabetical = true;
+                            applyFilter();
+                        }}>Z-A</button
+                    >
+                </div>
+                <h3>Ratings</h3>
+                <div>
+                    <button
+                        class:active={ratingsHigh}
+                        on:click={() => {
+                            turnOffFilters();
+                            ratingsHigh = true;
+                            applyFilter();
+                        }}>High to Low</button
+                    >
+                    <button
+                        class:active={ratingsLow}
+                        on:click={() => {
+                            turnOffFilters();
+                            ratingsLow = true;
+                            applyFilter();
+                        }}>Low to High</button
+                    >
+                </div>
             </div>
-            <h3>Ratings</h3>
             <div>
-                <button
-                    class:active={ratingsHigh}
-                    on:click={() => {
-                        turnOffFilters();
-                        ratingsHigh = true;
-                        applyFilter();
-                    }}>High to Low</button
-                >
-                <button
-                    class:active={ratingsLow}
-                    on:click={() => {
-                        turnOffFilters();
-                        ratingsLow = true;
-                        applyFilter();
-                    }}>Low to High</button
-                >
-            </div>
-        </div>
-        <div>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    bind:value={searchText}
-                    on:input={applySearchText}
-                />
-                <label for="country">Country:</label>
-                <select
-                    bind:value={countryData}
-                    on:change={searchHotelsByCountry}
-                >
-                    {#each countries as country_}
-                        <option value={country_}>{country_}</option>
-                    {/each}
-                </select>
-            </div>
-            <h2>Hotels</h2>
-            <ul>
-                {#each searchTextResults as hotel}
-                    <li on:click={() => transition("/hotel/" + hotel.id)}>
-                        <img src={hotel.images[4]} alt="" />
-                        <div class="info">
-                            <div class="detail">
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        bind:value={searchText}
+                        on:input={applySearchText}
+                    />
+                    <label for="country">Country:</label>
+                    <select
+                        bind:value={countryData}
+                        on:change={searchHotelsByCountry}
+                    >
+                        {#each countries as country_}
+                            <option value={country_}>{country_}</option>
+                        {/each}
+                    </select>
+                </div>
+                <h2>Hotels</h2>
+                <ul>
+                    {#each searchTextResults as hotel}
+                        <li on:click={() => transition("/hotel/" + hotel.id)}>
+                            <img src={hotel.images[4]} alt="" />
+                            <div class="info">
+                                <div class="detail">
+                                    <div>
+                                        <h3>{hotel.name}</h3>
+                                        <h4>Country: {hotel.country}</h4>
+                                        <h4 class="benefits">
+                                            Benefits:
+                                            {#each hotel.benefits as benefit}
+                                                <span>{benefit}</span>
+                                            {/each}
+                                        </h4>
+                                    </div>
+                                    <p>
+                                        {hotel.description}
+                                    </p>
+                                </div>
                                 <div>
-                                    <h3>{hotel.name}</h3>
-                                    <h4>Country: {hotel.country}</h4>
-                                    <h4 class="benefits">
-                                        Benefits:
-                                        {#each hotel.benefits as benefit}
-                                            <span>{benefit}</span>
-                                        {/each}
-                                    </h4>
-                                </div>
-                                <p>
-                                    {hotel.description}
-                                </p>
-                            </div>
-                            <div>
-                                <div class="rating">
-                                    <h3>{hotel.ratings}</h3>
-                                    <img src="/images/star.png" alt="" />
+                                    <div class="rating">
+                                        <h3>{hotel.ratings}</h3>
+                                        <img src="/images/star.png" alt="" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                {/each}
-            </ul>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 
 <style lang="scss">
+    .main-bg {
+        position: relative;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.4);
+        width: 100%;
+    }
     input,
     select {
         width: 400px;
@@ -319,7 +327,7 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        background-color: rgba(252, 247, 247, 0.7);
+        height: 100vh;
     }
     * {
         font-family: "Poppins", sans-serif;

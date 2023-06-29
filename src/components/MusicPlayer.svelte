@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { darkMode } from "../store";
 
     /**
      * @type {HTMLAudioElement}
@@ -8,31 +9,34 @@
     let muteSign = false;
     let volume = 0.07;
 
+    let isDark;
+
+    darkMode.subscribe((value) => (isDark = value));
+
     onMount(() => {
         music.volume = volume;
         music.loop = true;
-        if(music.paused) {
+        if (music.paused) {
             muteSign = true;
         }
-    })
-    
+    });
+
     function toggleMusic() {
         music.volume = volume;
-        if(music.paused) {
+        if (music.paused) {
             music.play();
             muteSign = false;
-        }
-        else {
+        } else {
             music.pause();
             muteSign = true;
         }
     }
 </script>
 
-<audio src="/sounds/idol.mp3" bind:this={music} autoplay loop></audio>
-<button on:click={toggleMusic}>
-    <img src="/images/musical-note.png" alt="Mute/Unmute Button">
-    <div id="mute" class="{muteSign ? 'muted' : 'unmuted'}"></div>
+<audio src="/sounds/idol.mp3" bind:this={music} autoplay loop />
+<button on:click={toggleMusic} class:dark={isDark} class:light={!isDark}>
+    <img src="/images/musical-note.png" alt="Mute/Unmute Button" />
+    <div id="mute" class={muteSign ? "muted" : "unmuted"} />
 </button>
 
 <style lang="scss">
@@ -61,32 +65,55 @@
         animation: musicAnimation;
         animation-iteration-count: infinite;
         animation-duration: 1.5s;
-        position: fixed;
-        top: 1rem;
-        right: 1.5rem;
         display: grid;
         place-items: center;
         border-radius: 50%;
         padding: 1rem;
-        background-color: $pink2;
         border: 2px solid white;
-        z-index: 11;
 
         img {
             width: 30px;
         }
     }
+    .light {
+        background-color: $pink2;
+    }
+    .dark {
+        background-color: $dark-pink;
+    }
     @keyframes musicAnimation {
-    0% { transform: scale(1); }
-    10% { transform: scale(1.08); }
-    20% { transform: scale(1.0);}
-    30% { transform: scale(1.045); }
-    40% { transform: scale(1.08);}
-    50% { transform: scale(1);}
-    60% { transform: scale(1.08); }
-    70% { transform: scale(1.045); }
-    80% { transform: scale(1.0);}
-    90% { transform: scale(1.045); }
-    100% { transform: scale(1);}
-}
+        0% {
+            transform: scale(1);
+        }
+        10% {
+            transform: scale(1.08);
+        }
+        20% {
+            transform: scale(1);
+        }
+        30% {
+            transform: scale(1.045);
+        }
+        40% {
+            transform: scale(1.08);
+        }
+        50% {
+            transform: scale(1);
+        }
+        60% {
+            transform: scale(1.08);
+        }
+        70% {
+            transform: scale(1.045);
+        }
+        80% {
+            transform: scale(1);
+        }
+        90% {
+            transform: scale(1.045);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
 </style>

@@ -37,78 +37,85 @@
     }
 </script>
 
-{#if userData}
-    <div class="container">
-        <h1><span>Top</span> Places</h1>
-        <div class="grid-1">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="main" on:click={() => searchByCountry("Cambodia")}>
-                <div
-                    class="img"
-                    style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_0.jpg');background-position:center;background-size:cover;"
-                />
-                <h2>Cambodia</h2>
-                <div class="detail">
+<div class="main-bg">
+    {#if userData}
+        <div class="container">
+            <h1><span>Top</span> Places</h1>
+            <div class="grid-1">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div class="main" on:click={() => searchByCountry("Cambodia")}>
+                    <div
+                        class="img"
+                        style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_0.jpg');background-position:center;background-size:cover;"
+                    />
                     <h2>Cambodia</h2>
-                    <p>
-                        Cambodia is a country that is known for its rich
-                        history, stunning temples, and beautiful beaches. The
-                        country is home to many ancient temples, including the
-                        famous Angkor Wat temple complex.
-                    </p>
+                    <div class="detail">
+                        <h2>Cambodia</h2>
+                        <p>
+                            Cambodia is a country that is known for its rich
+                            history, stunning temples, and beautiful beaches.
+                            The country is home to many ancient temples,
+                            including the famous Angkor Wat temple complex.
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="side-1" on:click={() => searchByCountry("France")}>
-                <div
-                    class="img"
-                    style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.2)), url('/placeholder_1.jpg');background-position:center;background-size:cover;"
-                />
-                <h2>France</h2>
-                <div class="detail">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div class="side-1" on:click={() => searchByCountry("France")}>
+                    <div
+                        class="img"
+                        style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.2)), url('/placeholder_1.jpg');background-position:center;background-size:cover;"
+                    />
                     <h2>France</h2>
-                    <p>
-                        France is a country located in Western Europe that is
-                        known for its rich history, stunning architecture, and
-                        world-class cuisine.
-                    </p>
+                    <div class="detail">
+                        <h2>France</h2>
+                        <p>
+                            France is a country located in Western Europe that
+                            is known for its rich history, stunning
+                            architecture, and world-class cuisine.
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div
-                class="side-2"
-                on:click={() => searchByCountry("United States")}
-            >
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div
-                    class="img"
-                    style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_2.jpg');background-position:center;background-size:cover;"
-                />
-                <h2>United States</h2>
-                <div class="detail">
+                    class="side-2"
+                    on:click={() => searchByCountry("United States")}
+                >
+                    <div
+                        class="img"
+                        style="background: linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0.3)), url('/placeholder_2.jpg');background-position:center;background-size:cover;"
+                    />
                     <h2>United States</h2>
-                    <p>
-                        The United States is a country located in North America
-                        that is known for its diverse culture, stunning natural
-                        beauty, and world-class cities.
-                    </p>
+                    <div class="detail">
+                        <h2>United States</h2>
+                        <p>
+                            The United States is a country located in North
+                            America that is known for its diverse culture,
+                            stunning natural beauty, and world-class cities.
+                        </p>
+                    </div>
                 </div>
             </div>
+            <NewHotels />
         </div>
-        <NewHotels />
-    </div>
-{/if}
-{#if hotelData}
-    <div class="container">
-        <Manager {data} />
-    </div>
-{/if}
+    {/if}
+    {#if hotelData}
+        <div class="container">
+            <Manager {data} />
+        </div>
+    {/if}
+</div>
 
 <style lang="scss">
+    .main-bg {
+        position: relative;
+        z-index: 1;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.4);
+    }
     .container {
         position: relative;
         z-index: 1;
         padding-bottom: 2rem;
-        background-color: rgba(252, 247, 247, 0.7);
     }
     h1 {
         font-size: 1.7rem;

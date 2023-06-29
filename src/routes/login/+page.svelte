@@ -41,23 +41,38 @@
     }
 </script>
 
-<div class="container">
-    <form>
-        <h1><span>L</span>ogin</h1>
-        <h3>Email</h3>
-        <div><input type="text" placeholder="Email" bind:value={email} /></div>
-        <h3>Password</h3>
-        <div>
-            <input type="text" placeholder="Password" bind:value={password} />
-        </div>
-        {#if failed}
-            <p class="fail">Wrong Email or Password</p>
-        {/if}
-        <button on:click={login}>Login</button>
-    </form>
+<div class="main-bg">
+    <div class="container">
+        <form>
+            <h1><span>L</span>ogin</h1>
+            <h3>Email</h3>
+            <div>
+                <input type="text" placeholder="Email" bind:value={email} />
+            </div>
+            <h3>Password</h3>
+            <div>
+                <input
+                    type="text"
+                    placeholder="Password"
+                    bind:value={password}
+                />
+            </div>
+            {#if failed}
+                <p class="fail">Wrong Email or Password</p>
+            {/if}
+            <button on:click={login}>Login</button>
+        </form>
+    </div>
 </div>
 
 <style lang="scss">
+    .main-bg {
+        position: relative;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.4);
+        width: 100%;
+        height: 100vh;
+    }
     .fail {
         color: red;
     }
@@ -83,7 +98,6 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        background-color: rgba(252, 247, 247, 0.7);
     }
     * {
         font-family: "Poppins", sans-serif;

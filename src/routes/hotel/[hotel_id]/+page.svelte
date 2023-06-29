@@ -149,117 +149,125 @@
     }
 </script>
 
-{#if hotelData}
-    <div class="container">
-        <div class="grid">
-            <div>
-                <img class="hotel-cover" src={hotelData.images[4]} alt="" />
-                <div class="info">
-                    <h1>{hotelData.name}</h1>
-                    <h3>Country: <b>{hotelData.country}</b></h3>
-                    <h3>Google Map:</h3>
-                    <iframe
-                        src={"https://maps.google.com/maps?&q=" +
-                            encodeURIComponent(hotelData.googleMap) +
-                            "&output=embed"}
-                        width="100%"
-                        height="200"
-                        style="border:0;"
-                        allowfullscreen=""
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                    />
-                </div>
-            </div>
-            <div>
-                <div class="slide">
-                    <div
-                        class="slide-images"
-                        style="transform: translateX({currentPos}%)"
-                    >
-                        <img src={hotelData.images[0]} alt="" />
-                        <img src={hotelData.images[1]} alt="" />
-                        <img src={hotelData.images[2]} alt="" />
-                        <img src={hotelData.images[3]} alt="" />
+<div class="main-bg">
+    {#if hotelData}
+        <div class="container">
+            <div class="grid">
+                <div>
+                    <img class="hotel-cover" src={hotelData.images[4]} alt="" />
+                    <div class="info">
+                        <h1>{hotelData.name}</h1>
+                        <h3>Country: <b>{hotelData.country}</b></h3>
+                        <h3>Google Map:</h3>
+                        <iframe
+                            src={"https://maps.google.com/maps?&q=" +
+                                encodeURIComponent(hotelData.googleMap) +
+                                "&output=embed"}
+                            width="100%"
+                            height="200"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                        />
                     </div>
                 </div>
-                <div class="slide-controls">
-                    <button on:click={() => setSlide(0)}>
-                        <img src={hotelData.images[0]} alt="" />
-                    </button>
-                    <button on:click={() => setSlide(1)}>
-                        <img src={hotelData.images[1]} alt="" />
-                    </button>
-                    <button on:click={() => setSlide(2)}>
-                        <img src={hotelData.images[2]} alt="" />
-                    </button>
-                    <button on:click={() => setSlide(3)}>
-                        <img src={hotelData.images[3]} alt="" />
-                    </button>
+                <div>
+                    <div class="slide">
+                        <div
+                            class="slide-images"
+                            style="transform: translateX({currentPos}%)"
+                        >
+                            <img src={hotelData.images[0]} alt="" />
+                            <img src={hotelData.images[1]} alt="" />
+                            <img src={hotelData.images[2]} alt="" />
+                            <img src={hotelData.images[3]} alt="" />
+                        </div>
+                    </div>
+                    <div class="slide-controls">
+                        <button on:click={() => setSlide(0)}>
+                            <img src={hotelData.images[0]} alt="" />
+                        </button>
+                        <button on:click={() => setSlide(1)}>
+                            <img src={hotelData.images[1]} alt="" />
+                        </button>
+                        <button on:click={() => setSlide(2)}>
+                            <img src={hotelData.images[2]} alt="" />
+                        </button>
+                        <button on:click={() => setSlide(3)}>
+                            <img src={hotelData.images[3]} alt="" />
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <h3>
-            Benefits:
-            {#each hotelData.benefits as benefit}
-                <span>{benefit}</span>
-            {/each}
-        </h3>
-        <div class="description">
-            <h2>Description</h2>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor
-                delectus non magni distinctio nostrum quasi. Nemo, quae.
-                Consequatur, autem molestiae voluptatem facilis iste soluta
-                labore corporis inventore veniam illum pariatur!
-            </p>
-        </div>
-        <div class="rooms">
-            <h2>Rooms</h2>
-            <ul>
-                {#each roomsData as room}
-                    <li
-                        on:click={selectRoom(room)}
-                        class={room.availability == 1
-                            ? "available"
-                            : "occupied"}
-                        class:active={selectedRoom?.id == room.id}
-                    >
-                        <h3>Room: {room.number}</h3>
-                        <p>
-                            Status:
-                            {#if room.availability == 1}
-                                Available
-                            {:else}
-                                Occupied
-                            {/if}
-                        </p>
-                        <p>
-                            Beds: {room.beds}
-                        </p>
-                        <p>
-                            Price: {room.price}
-                        </p>
-                    </li>
+            <h3>
+                Benefits:
+                {#each hotelData.benefits as benefit}
+                    <span>{benefit}</span>
                 {/each}
-            </ul>
-        </div>
-        <div class="booking">
-            <div>
-                <h3>Days</h3>
-                <input type="number" bind:value={days} />
+            </h3>
+            <div class="description">
+                <h2>Description</h2>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Dolor delectus non magni distinctio nostrum quasi. Nemo,
+                    quae. Consequatur, autem molestiae voluptatem facilis iste
+                    soluta labore corporis inventore veniam illum pariatur!
+                </p>
             </div>
-            <div>
-                <h3>Total Cost</h3>
-                <p>${totalCost}</p>
+            <div class="rooms">
+                <h2>Rooms</h2>
+                <ul>
+                    {#each roomsData as room}
+                        <li
+                            on:click={selectRoom(room)}
+                            class={room.availability == 1
+                                ? "available"
+                                : "occupied"}
+                            class:active={selectedRoom?.id == room.id}
+                        >
+                            <h3>Room: {room.number}</h3>
+                            <p>
+                                Status:
+                                {#if room.availability == 1}
+                                    Available
+                                {:else}
+                                    Occupied
+                                {/if}
+                            </p>
+                            <p>
+                                Beds: {room.beds}
+                            </p>
+                            <p>
+                                Price: {room.price}
+                            </p>
+                        </li>
+                    {/each}
+                </ul>
             </div>
-            <button class="book" on:click={bookRoom}>Book Room</button>
+            <div class="booking">
+                <div>
+                    <h3>Days</h3>
+                    <input type="number" bind:value={days} />
+                </div>
+                <div>
+                    <h3>Total Cost</h3>
+                    <p>${totalCost}</p>
+                </div>
+                <button class="book" on:click={bookRoom}>Book Room</button>
+            </div>
+            <Review {data} />
         </div>
-        <Review {data} />
-    </div>
-{/if}
+    {/if}
+</div>
 
 <style lang="scss">
+    .main-bg {
+        position: relative;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.4);
+        width: 100%;
+    }
     .booking {
         display: flex;
         column-gap: 1rem;
@@ -304,7 +312,6 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        background-color: rgba(252, 247, 247, 0.7);
     }
     * {
         font-family: "Poppins", sans-serif;

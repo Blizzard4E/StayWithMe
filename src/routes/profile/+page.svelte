@@ -181,127 +181,137 @@
     }
 </script>
 
-{#if userData}
-    <div class="container">
-        <div class="profile-grid">
-            <div class="profile">
-                {#if editMode}
-                    <div class="edit">
-                        <h2>Profile</h2>
-                        <input type="file" bind:files={editProfilePic} />
-                    </div>
-                {/if}
-                <img src={userData.profile_pic} class:editMode alt="" />
-            </div>
-            <div class="info">
-                {#if editMode}
-                    <h1>Name</h1>
-                    <input type="text" bind:value={editName} />
-                    <h2>Bio</h2>
-                    <input type="text" bind:value={editBio} />
-                {:else}
-                    <h1>{userData.username}</h1>
-                    <h2>{userData.email}</h2>
-                    <p>{userData.bio}</p>
-                {/if}
-
-                <div class="btn">
+<div class="main-bg">
+    {#if userData}
+        <div class="container">
+            <div class="profile-grid">
+                <div class="profile">
                     {#if editMode}
-                        <button class="confirm" on:click={updateUser}
-                            >Confirm</button
-                        >
+                        <div class="edit">
+                            <h2>Profile</h2>
+                            <input type="file" bind:files={editProfilePic} />
+                        </div>
                     {/if}
-                    <button class="edit" on:click={toggleEdit}>
+                    <img src={userData.profile_pic} class:editMode alt="" />
+                </div>
+                <div class="info">
+                    {#if editMode}
+                        <h1>Name</h1>
+                        <input type="text" bind:value={editName} />
+                        <h2>Bio</h2>
+                        <input type="text" bind:value={editBio} />
+                    {:else}
+                        <h1>{userData.username}</h1>
+                        <h2>{userData.email}</h2>
+                        <p>{userData.bio}</p>
+                    {/if}
+
+                    <div class="btn">
                         {#if editMode}
-                            Cancel
-                        {:else}
-                            Edit
+                            <button class="confirm" on:click={updateUser}
+                                >Confirm</button
+                            >
                         {/if}
-                    </button>
-                    <button class="logout" on:click={logOut}>Log Out</button>
+                        <button class="edit" on:click={toggleEdit}>
+                            {#if editMode}
+                                Cancel
+                            {:else}
+                                Edit
+                            {/if}
+                        </button>
+                        <button class="logout" on:click={logOut}>Log Out</button
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="booking">
+                    <h1>Bookings</h1>
+                    <ul>
+                        {#each bookingsData as booking}
+                            <li
+                                class:current={booking.on_going}
+                                on:click={() =>
+                                    transition("/hotel/" + booking.hotel_id.id)}
+                            >
+                                <img src={booking.hotel_id.images[4]} alt="" />
+                                <div class="hotel">
+                                    <h1>{booking.hotel_id.name}</h1>
+                                    <h3>{booking.hotel_id.country}</h3>
+                                    <h2>
+                                        {#if booking.on_going}
+                                            Staying In
+                                        {:else}
+                                            Checked Out
+                                        {/if}
+                                    </h2>
+                                </div>
+                                <div class="booking-info">
+                                    <h1>Room {booking.room_id.number}</h1>
+                                    <h2>
+                                        {booking.days}
+                                        {#if booking.days > 1}
+                                            Days
+                                        {:else}
+                                            Day
+                                        {/if}
+                                    </h2>
+                                    <h2>${booking.total_cost}</h2>
+                                </div>
+                            </li>
+                        {/each}
+                    </ul>
+                </div>
+                <div class="review">
+                    <h1>Reviews</h1>
+                    <ul>
+                        {#each reviewsData as review}
+                            <li>
+                                <div class="message">
+                                    <img
+                                        class="profile"
+                                        src={userData.profile_pic}
+                                        alt=""
+                                    />
+                                    <div
+                                        class="comment"
+                                        on:click={() =>
+                                            transition(
+                                                "/hotel/" + review.hotel_id.id
+                                            )}
+                                    >
+                                        <div class="review-stars">
+                                            <h1>{review.hotel_id.name}</h1>
+                                            {#each Array(review.ratings) as _, i}
+                                                <img
+                                                    class="star"
+                                                    src="/images/star.png"
+                                                    alt=""
+                                                />
+                                            {/each}
+                                        </div>
+                                        <p>
+                                            {review.feedback}
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        {/each}
+                    </ul>
                 </div>
             </div>
         </div>
-        <div class="grid">
-            <div class="booking">
-                <h1>Bookings</h1>
-                <ul>
-                    {#each bookingsData as booking}
-                        <li
-                            class:current={booking.on_going}
-                            on:click={() =>
-                                transition("/hotel/" + booking.hotel_id.id)}
-                        >
-                            <img src={booking.hotel_id.images[4]} alt="" />
-                            <div class="hotel">
-                                <h1>{booking.hotel_id.name}</h1>
-                                <h3>{booking.hotel_id.country}</h3>
-                                <h2>
-                                    {#if booking.on_going}
-                                        Staying In
-                                    {:else}
-                                        Checked Out
-                                    {/if}
-                                </h2>
-                            </div>
-                            <div class="booking-info">
-                                <h1>Room {booking.room_id.number}</h1>
-                                <h2>
-                                    {booking.days}
-                                    {#if booking.days > 1}
-                                        Days
-                                    {:else}
-                                        Day
-                                    {/if}
-                                </h2>
-                                <h2>${booking.total_cost}</h2>
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
-            </div>
-            <div class="review">
-                <h1>Reviews</h1>
-                <ul>
-                    {#each reviewsData as review}
-                        <li>
-                            <div class="message">
-                                <img
-                                    class="profile"
-                                    src={userData.profile_pic}
-                                    alt=""
-                                />
-                                <div
-                                    class="comment"
-                                    on:click={() =>
-                                        transition(
-                                            "/hotel/" + review.hotel_id.id
-                                        )}
-                                >
-                                    <div class="review-stars">
-                                        <h1>{review.hotel_id.name}</h1>
-                                        {#each Array(review.ratings) as _, i}
-                                            <img
-                                                class="star"
-                                                src="/images/star.png"
-                                                alt=""
-                                            />
-                                        {/each}
-                                    </div>
-                                    <p>
-                                        {review.feedback}
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
-            </div>
-        </div>
-    </div>
-{/if}
+    {/if}
+</div>
 
 <style lang="scss">
+    .main-bg {
+        position: relative;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.4);
+        width: 100%;
+        height: 100vh;
+    }
     input {
         width: 400px;
         padding: 0.5rem 1rem;
@@ -400,6 +410,7 @@
                 align-items: end;
             }
             li {
+                cursor: pointer;
                 border: 1px solid black;
                 padding: 0.5rem;
                 display: grid;
@@ -419,7 +430,10 @@
                     object-fit: cover;
                 }
                 &:hover {
+                    border: 1px solid $pink2;
+                    background-color: $pink2;
                     transform: scale(1.05);
+                    color: white;
                 }
             }
             .current {
@@ -472,7 +486,6 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        background-color: rgba(252, 247, 247, 0.7);
     }
     .profile-grid {
         display: grid;
