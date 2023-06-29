@@ -6,6 +6,7 @@
 
     let isDark;
     let imageName;
+    let canChange = true;
 
     darkMode.subscribe((value) => (isDark = value));
 
@@ -20,6 +21,7 @@
         }
     });
     function transition() {
+        canChange = false;
         transitionOut = false;
         setTimeout(() => {
             darkMode.update((value) => !value);
@@ -33,11 +35,12 @@
             } else {
                 imageName = "ai.jpg";
             }
+            canChange = true;
         }, 2000);
     }
 </script>
 
-<button on:click={toggleState} class:dark={isDark}>
+<button on:click={toggleState} class:dark={isDark} disabled={!canChange}>
     <img src="/images/heart.png" alt="Mute/Unmute Button" />
     <div class="bg" class:out={transitionOut} class:in={!transitionOut} />
 </button>
