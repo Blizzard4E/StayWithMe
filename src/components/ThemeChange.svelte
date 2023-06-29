@@ -5,12 +5,20 @@
     let transitionOut = true;
 
     let isDark;
+    let imageName;
 
     darkMode.subscribe((value) => (isDark = value));
 
     function toggleState() {
         transition();
     }
+    onMount(() => {
+        if (isDark) {
+            imageName = "aidol.png";
+        } else {
+            imageName = "ai.jpg";
+        }
+    });
     function transition() {
         transitionOut = false;
         setTimeout(() => {
@@ -19,6 +27,13 @@
         setTimeout(() => {
             transitionOut = true;
         }, 1800);
+        setTimeout(() => {
+            if (isDark) {
+                imageName = "aidol.png";
+            } else {
+                imageName = "ai.jpg";
+            }
+        }, 2000);
     }
 </script>
 
@@ -26,7 +41,14 @@
     <img src="/images/heart.png" alt="Mute/Unmute Button" />
     <div class="bg" class:out={transitionOut} class:in={!transitionOut} />
 </button>
-<div class="ai" class:hide={transitionOut} class:show={!transitionOut}>
+<div
+    class="ai"
+    class:hide={transitionOut}
+    class:show={!transitionOut}
+    style={"background: radial-gradient( circle at center, rgba(20, 24, 29, 0.3), rgba(20, 24, 29, 0.8) 50%, rgba(20, 24, 29, 0.9) 60%, rgba(20, 24, 29, 1) 70% ),  url('/images/" +
+        imageName +
+        "');background-repeat: no-repeat; background-size: cover; background-position: center;"}
+>
     <img src="/images/heartStroke.png" alt="" />
 </div>
 
@@ -39,17 +61,6 @@
         height: 100vh;
         width: 80vw;
         color: rgb(20, 24, 29);
-        background: radial-gradient(
-                circle at center,
-                rgba(20, 24, 29, 0.3),
-                rgba(20, 24, 29, 0.8) 50%,
-                rgba(20, 24, 29, 0.9) 60%,
-                rgba(20, 24, 29, 1) 70%
-            ),
-            url("/images/ai.jpg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
         pointer-events: none;
 
         img {
