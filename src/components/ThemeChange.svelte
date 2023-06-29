@@ -5,7 +5,7 @@
     let transitionOut = true;
 
     let isDark;
-    let imageName;
+    let imageName = "ai.jpg";
     let canChange = true;
 
     darkMode.subscribe((value) => (isDark = value));
