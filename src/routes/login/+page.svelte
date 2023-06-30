@@ -1,8 +1,10 @@
 <script>
     import { onMount } from "svelte";
-    import { transitionState } from "../../store";
+    import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
+    let isDark;
 
+    darkMode.subscribe((value) => (isDark = value));
     let email = "",
         password = "",
         failed = false;
@@ -37,11 +39,11 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 
-<div class="main-bg">
+<div class="main-bg" class:dark={isDark}>
     <div class="container">
         <form>
             <h1><span>L</span>ogin</h1>
@@ -71,7 +73,21 @@
         z-index: 2;
         background-color: rgba(255, 255, 255, 0.4);
         width: 100%;
-        height: 100vh;
+        min-height: 100vh;
+    }
+    .dark {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        h1 {
+            span {
+                color: $dark-red;
+            }
+        }
+        form {
+            button {
+                background-color: $dark-red;
+            }
+        }
     }
     .fail {
         color: red;

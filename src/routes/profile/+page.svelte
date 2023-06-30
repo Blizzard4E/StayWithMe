@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { transitionState } from "../../store";
+    import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
     import { user } from "../stores";
     import jwt_decode from "jwt-decode";
@@ -11,6 +11,7 @@
     let reviewsData = [],
         bookingsData = [];
     let editMode = false;
+    let isDark;
 
     let editName;
     let editBio;
@@ -19,6 +20,10 @@
     user.subscribe((value) => {
         userData = value;
         getInfo();
+    });
+
+    darkMode.subscribe((value) => {
+        isDark = value;
     });
 
     async function checkToken() {
@@ -99,26 +104,30 @@
 
     async function uploadImage() {
         return new Promise(async (resolve, reject) => {
-            let formData = new FormData();
-            formData.append("file", editProfilePic[0]);
-            formData.append("upload_preset", data.preset_name);
-            formData.append("api_key", data.cloud_api_key);
+            if (editProfilePic) {
+                let formData = new FormData();
+                formData.append("file", editProfilePic[0]);
+                formData.append("upload_preset", data.preset_name);
+                formData.append("api_key", data.cloud_api_key);
 
-            fetch(
-                "https://api.cloudinary.com/v1_1/" +
-                    data.cloud_name +
-                    "/upload",
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            )
-                .then((res) => res.json())
-                .then((image) => {
-                    console.log("Uploaded New Profile Image");
-                    resolve(image.url);
-                })
-                .catch((err) => reject(err));
+                fetch(
+                    "https://api.cloudinary.com/v1_1/" +
+                        data.cloud_name +
+                        "/upload",
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                )
+                    .then((res) => res.json())
+                    .then((image) => {
+                        console.log("Uploaded New Profile Image");
+                        resolve(image.url);
+                    })
+                    .catch((err) => reject(err));
+            } else {
+                resolve(null);
+            }
         });
     }
 
@@ -133,25 +142,38 @@
                 const profileImgLink = await uploadImage().catch((err) => {
                     return console.log(err);
                 });
+                let newData = {
+                    token: localStorage.getItem("access_token"),
+                    user_id: userData.id,
+                };
+                if (profileImgLink) {
+                    newData.profile_pic = profileImgLink;
+                }
+                if (editBio.length > 0) {
+                    newData.bio = editBio;
+                }
+                if (editName.length > 0) {
+                    newData.username = editName;
+                }
                 fetch("https://stay-withme-api.cyclic.app/users/update", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        token: localStorage.getItem("access_token"),
-                        user_id: userData.id,
-                        username: editName,
-                        bio: editBio,
-                        profile_pic: profileImgLink,
-                    }),
+                    body: JSON.stringify(newData),
                 })
                     .then((res) => res.json())
                     .then((jsonData) => {
                         if (jsonData.status == 200) {
-                            userData.username = editName;
-                            userData.bio = editBio;
-                            userData.profile_pic = profileImgLink;
+                            if (profileImgLink) {
+                                userData.profile_pic = profileImgLink;
+                            }
+                            if (editBio.length > 0) {
+                                userData.bio = editBio;
+                            }
+                            if (editName.length > 0) {
+                                userData.username = editName;
+                            }
                             user.update((value) => userData);
                             toggleEdit();
                         }
@@ -177,11 +199,11 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 
-<div class="main-bg">
+<div class="main-bg" class:dark={isDark}>
     {#if userData}
         <div class="container">
             <div class="profile-grid">
@@ -310,7 +332,37 @@
         z-index: 2;
         background-color: rgba(255, 255, 255, 0.4);
         width: 100%;
-        height: 100vh;
+        min-height: 100vh;
+    }
+    .dark {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        .profile {
+            border: 4px solid $dark-red;
+        }
+        .grid {
+            .booking {
+                li {
+                    border: 1px solid white;
+                    &:hover {
+                        border: 1px solid $dark-red;
+                        background-color: $dark-red;
+                    }
+                }
+            }
+        }
+        .review {
+            ul {
+                .message {
+                    .profile {
+                        border: 2px solid $dark-red;
+                    }
+                    .comment {
+                        background-color: $dark-red;
+                    }
+                }
+            }
+        }
     }
     input {
         width: 400px;
@@ -502,6 +554,11 @@
         border: 4px solid $pink2;
         border-radius: 50%;
         overflow: hidden;
+        transition: 0.15s ease-in-out;
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.05);
+        }
         .edit {
             color: white;
             position: absolute;

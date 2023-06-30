@@ -93,7 +93,7 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 

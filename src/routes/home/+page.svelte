@@ -35,7 +35,7 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 
@@ -111,7 +111,7 @@
     .main-bg {
         position: relative;
         z-index: 1;
-        height: 100vh;
+        min-height: 100vh;
         background-color: rgba(255, 255, 255, 0.4);
     }
     .bg-dark {

@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import BackgroundStarsPink from "../../components/BackgroundStarsPink.svelte";
-    import { transitionState } from "../../store";
+    import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
     import { country, user } from "../stores";
     import jwt_decode from "jwt-decode";
@@ -15,6 +15,9 @@
     let notAlphabetical = false;
     let ratingsHigh = false;
     let ratingsLow = false;
+    let isDark;
+
+    darkMode.subscribe((value) => (isDark = value));
 
     user.subscribe((value) => (userData = value));
     country.subscribe((value) => (countryData = value));
@@ -174,17 +177,17 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto("/hotel");
-        }, 1000);
+        }, 800);
     }
     function transition(path) {
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 
-<div class="main-bg">
+<div class="main-bg" class:dark={isDark}>
     <div class="container">
         <div class="grid">
             <div class="filter">
@@ -246,7 +249,7 @@
                         {/each}
                     </select>
                 </div>
-                <h2>Hotels</h2>
+                <h2 style="margin-top: 2rem;">Hotels</h2>
                 <ul>
                     {#each searchTextResults as hotel}
                         <li on:click={() => transition("/hotel/" + hotel.id)}>
@@ -288,6 +291,28 @@
         z-index: 2;
         background-color: rgba(255, 255, 255, 0.4);
         width: 100%;
+        min-height: 100vh;
+    }
+    .dark {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        .filter {
+            .active {
+                background-color: $dark-red;
+            }
+            button {
+                &:hover {
+                    background-color: $dark-red;
+                }
+            }
+        }
+        ul {
+            li {
+                &:hover {
+                    background-color: $dark-red;
+                }
+            }
+        }
     }
     input,
     select {
@@ -327,7 +352,6 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        height: 100vh;
     }
     * {
         font-family: "Poppins", sans-serif;

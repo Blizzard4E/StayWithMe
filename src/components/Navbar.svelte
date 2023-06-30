@@ -83,7 +83,7 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 
@@ -226,6 +226,15 @@
                 border: 3px solid $dark-red;
             }
         }
+        .signUp {
+            a {
+                color: white;
+                &:hover {
+                    transform: scale(1.1);
+                    color: $dark-red;
+                }
+            }
+        }
     }
     .signUp {
         display: flex;
@@ -233,7 +242,7 @@
     .signUp a {
         background: none;
         color: black;
-        font-weight: normal;
+        font-weight: bold;
         padding: 0;
         cursor: pointer;
         font-size: 1rem;

@@ -1,9 +1,11 @@
 <script>
     import { onMount } from "svelte";
-    import { transitionState } from "../../store";
+    import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
     export let data;
+    let isDark;
 
+    darkMode.subscribe((value) => (isDark = value));
     const countries = [
         "Bangladesh",
         "Brazil",
@@ -127,70 +129,87 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto(path);
-        }, 1000);
+        }, 800);
     }
 </script>
 
-<div class="container">
-    <form action="">
-        <h1><span>Create</span> A Hotel</h1>
-        <h3>Name</h3>
-        <div><input type="text" placeholder="Name" bind:value={name} /></div>
-        <h3>Email</h3>
-        <div><input type="text" placeholder="Email" bind:value={email} /></div>
-        <h3>Password</h3>
-        <div>
-            <input type="text" placeholder="Password" bind:value={password} />
-        </div>
-        <h3>Description</h3>
-        <div>
-            <input
-                type="text"
-                placeholder="Description"
-                bind:value={description}
+<div class="main-bg" class:dark={isDark}>
+    <div class="container">
+        <form action="">
+            <h1><span>Create</span> A Hotel</h1>
+            <h3>Name</h3>
+            <div>
+                <input type="text" placeholder="Name" bind:value={name} />
+            </div>
+            <h3>Email</h3>
+            <div>
+                <input type="text" placeholder="Email" bind:value={email} />
+            </div>
+            <h3>Password</h3>
+            <div>
+                <input
+                    type="text"
+                    placeholder="Password"
+                    bind:value={password}
+                />
+            </div>
+            <h3>Description</h3>
+            <div>
+                <input
+                    type="text"
+                    placeholder="Description"
+                    bind:value={description}
+                />
+            </div>
+            <h3>Country</h3>
+            <label for="country">Country:</label>
+            <select bind:value={country}>
+                {#each countries as country_}
+                    <option value={country_}>{country_}</option>
+                {/each}
+            </select>
+            <h3>Google Map Name Optional</h3>
+            <div style="margin-bottom: 1rem;">
+                <input
+                    type="text"
+                    placeholder="Google Map Link"
+                    bind:value={googleMap}
+                />
+            </div>
+            <iframe
+                src={"https://maps.google.com/maps?&q=" +
+                    encodeURIComponent(googleMap) +
+                    "&output=embed"}
+                width="100%"
+                height="200"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
             />
-        </div>
-        <h3>Country</h3>
-        <label for="country">Country:</label>
-        <select bind:value={country}>
-            {#each countries as country_}
-                <option value={country_}>{country_}</option>
-            {/each}
-        </select>
-        <h3>Google Map Name Optional</h3>
-        <div style="margin-bottom: 1rem;">
-            <input
-                type="text"
-                placeholder="Google Map Link"
-                bind:value={googleMap}
-            />
-        </div>
-        <iframe
-            src={"https://maps.google.com/maps?&q=" +
-                encodeURIComponent(googleMap) +
-                "&output=embed"}
-            width="100%"
-            height="200"
-            style="border:0;"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-        />
-        <h3>Cover Image</h3>
-        <div><input type="file" bind:files={cover_img} /></div>
-        <h3>Image 1</h3>
-        <div><input type="file" bind:files={img_1} /></div>
-        <h3>Image 2</h3>
-        <div><input type="file" bind:files={img_2} /></div>
-        <h3>Image 3</h3>
-        <div><input type="file" bind:files={img_3} /></div>
-        <h3>Image 4</h3>
-        <div><input type="file" bind:files={img_4} /></div>
-        <button on:click={signUp}>Create</button>
-    </form>
+            <h3>Cover Image</h3>
+            <div><input type="file" bind:files={cover_img} /></div>
+            <h3>Image 1</h3>
+            <div><input type="file" bind:files={img_1} /></div>
+            <h3>Image 2</h3>
+            <div><input type="file" bind:files={img_2} /></div>
+            <h3>Image 3</h3>
+            <div><input type="file" bind:files={img_3} /></div>
+            <h3>Image 4</h3>
+            <div><input type="file" bind:files={img_4} /></div>
+            <button on:click={signUp}>Create</button>
+        </form>
+    </div>
 </div>
 
 <style lang="scss">
+    .main-bg {
+        position: relative;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.4);
+        width: 100%;
+        min-height: 100vh;
+    }
     .container {
         display: grid;
         place-items: center;
@@ -198,7 +217,23 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        background-color: rgba(252, 247, 247, 0.7);
+    }
+    h3 {
+        margin-top: 1rem;
+    }
+    .dark {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        h1 {
+            span {
+                color: $dark-red;
+            }
+        }
+        form {
+            button {
+                background-color: $dark-red;
+            }
+        }
     }
     * {
         font-family: "Poppins", sans-serif;

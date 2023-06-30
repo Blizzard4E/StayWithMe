@@ -25,7 +25,7 @@
         transitionOut = false;
         setTimeout(() => {
             darkMode.update((value) => !value);
-        }, 1000);
+        }, 800);
         setTimeout(() => {
             transitionOut = true;
         }, 1800);

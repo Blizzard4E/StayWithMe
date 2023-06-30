@@ -16,7 +16,7 @@
         transitionState.update((state) => 1);
         setTimeout(() => {
             goto("/home");
-        }, 1000);
+        }, 800);
     }
 
     onMount(() => {
@@ -178,9 +178,6 @@
         }
     }
     .content {
-        opacity: 0;
-        animation: hide 1.2s;
-        animation-fill-mode: forwards;
     }
     @keyframes hide {
         0% {
