@@ -2,14 +2,20 @@
     import jwt_decode from "jwt-decode";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import { transitionState } from "../store";
+    import { darkMode, transitionState } from "../store";
     import BackgroundStarsPink from "./BackgroundStarsPink.svelte";
     import ThreeDBackgroundVertical from "./ThreeDBackgroundVertical.svelte";
     import { user, hotel } from "../routes/stores";
     import { page } from "$app/stores";
+    import ThreeDBackgroundVerticalDark from "./ThreeDBackgroundVerticalDark.svelte";
+    import BackgroundStarsRed from "./BackgroundStarsRed.svelte";
+    import BackgroundStarsRedBehind from "./BackgroundStarsRedBehind.svelte";
 
     let userData;
     let hotelData;
+    let isDark;
+
+    darkMode.subscribe((value) => (isDark = value));
 
     user.subscribe((value) => {
         userData = value;
@@ -81,9 +87,19 @@
     }
 </script>
 
-<div class="objects"><ThreeDBackgroundVertical /></div>
-<BackgroundStarsPink />
-<div class="main-bg">
+<div class="objects">
+    {#if isDark}
+        <ThreeDBackgroundVerticalDark />
+    {:else}
+        <ThreeDBackgroundVertical />
+    {/if}
+</div>
+{#if isDark}
+    <BackgroundStarsRedBehind />
+{:else}
+    <BackgroundStarsPink />
+{/if}
+<div class="main-bg" class:bg-dark={isDark}>
     <div class="container">
         <nav>
             <div
@@ -176,6 +192,41 @@
         z-index: 1;
         background-color: rgba(255, 255, 255, 0.4);
     }
+    .bg-dark {
+        background: rgba(0, 0, 0, 0.5);
+
+        a {
+            color: white;
+            &:hover {
+                color: $dark-red;
+            }
+        }
+        .logo {
+            h1 {
+                color: $dark-red;
+                span {
+                    color: white;
+                }
+            }
+            h2 {
+                color: white;
+                span {
+                    color: white;
+                }
+            }
+        }
+        .profile {
+            h3 {
+                color: white;
+                span {
+                    color: $dark-red;
+                }
+            }
+            img {
+                border: 3px solid $dark-red;
+            }
+        }
+    }
     .signUp {
         display: flex;
     }
@@ -217,6 +268,7 @@
         align-items: center;
     }
     a {
+        font-weight: bold;
         color: black;
         margin: 1rem;
         text-decoration: none;
@@ -232,8 +284,8 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        transition: 0.2s ease-in-out;
         &:hover {
-            transition: 0.2s ease-in-out;
             transform: scale(1.1);
         }
         h3 {
@@ -241,6 +293,7 @@
             font-size: 1.5rem;
             margin-right: 1rem;
             span {
+                font-size: 1.6rem;
                 color: $pink2;
             }
         }

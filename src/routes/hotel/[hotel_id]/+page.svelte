@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { transitionState } from "../../../store";
+    import { darkMode, transitionState } from "../../../store";
     import Review from "../../../components/Review.svelte";
     import { goto } from "$app/navigation";
     import jwt_decode from "jwt-decode";
@@ -9,6 +9,11 @@
     export let data;
 
     let userData;
+    let isDark;
+
+    darkMode.subscribe((value) => {
+        isDark = value;
+    });
 
     user.subscribe((value) => {
         userData = value;
@@ -149,7 +154,7 @@
     }
 </script>
 
-<div class="main-bg">
+<div class="main-bg" class:bg-dark={isDark}>
     {#if hotelData}
         <div class="container">
             <div class="grid">
@@ -239,7 +244,7 @@
                                 Beds: {room.beds}
                             </p>
                             <p>
-                                Price: {room.price}
+                                Price: ${room.price}
                             </p>
                         </li>
                     {/each}
@@ -254,7 +259,11 @@
                     <h3>Total Cost</h3>
                     <p>${totalCost}</p>
                 </div>
-                <button class="book" on:click={bookRoom}>Book Room</button>
+                <button
+                    class="book"
+                    on:click={bookRoom}
+                    disabled={!selectedRoom}>Book Room</button
+                >
             </div>
             <Review {data} />
         </div>
@@ -267,6 +276,42 @@
         z-index: 2;
         background-color: rgba(255, 255, 255, 0.4);
         width: 100%;
+        min-height: 100vh;
+    }
+    .bg-dark {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        .book {
+            background-color: $dark-red;
+        }
+        .grid {
+            .hotel-cover {
+                border: 3px solid $dark-red;
+            }
+            .slide {
+                border: 3px solid $dark-red;
+            }
+            .slide-controls {
+                button {
+                    &:hover {
+                        background-color: $dark-red;
+                    }
+                }
+            }
+        }
+        .rooms {
+            ul {
+                .available {
+                    border: 1px solid grey;
+                    &:hover {
+                        background-color: $dark-red;
+                    }
+                }
+            }
+            .active {
+                background-color: $dark-red;
+            }
+        }
     }
     .booking {
         display: flex;
@@ -302,9 +347,13 @@
         font-weight: bold;
         font-size: 0.9rem;
         cursor: pointer;
+        transition: 0.15s ease-in-out;
         &:hover {
-            transition: 0.15s ease-in-out;
             transform: scale(1.1);
+        }
+        &:disabled {
+            cursor: not-allowed;
+            transform: scale(1);
         }
     }
     .container {
@@ -390,6 +439,7 @@
             font-size: 1.3rem;
         }
         ul {
+            margin-top: 0.5rem;
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             column-gap: 1rem;

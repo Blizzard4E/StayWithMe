@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { transitionState } from "../../store";
+    import { darkMode, transitionState } from "../../store";
     import Navbar from "../../components/Navbar.svelte";
     import ThreeDBackground from "../../components/ThreeDBackground.svelte";
     import BackgroundStarsPink from "../../components/BackgroundStarsPink.svelte";
@@ -13,6 +13,7 @@
 
     let userData;
     let hotelData;
+    let isDark;
 
     user.subscribe((value) => {
         userData = value;
@@ -20,6 +21,7 @@
     hotel.subscribe((value) => {
         hotelData = value;
     });
+    darkMode.subscribe((value) => (isDark = value));
 
     function searchByCountry(countryName) {
         country.update((value) => countryName);
@@ -37,7 +39,7 @@
     }
 </script>
 
-<div class="main-bg">
+<div class="main-bg" class:bg-dark={isDark}>
     {#if userData}
         <div class="container">
             <h1><span>Top</span> Places</h1>
@@ -111,6 +113,48 @@
         z-index: 1;
         height: 100vh;
         background-color: rgba(255, 255, 255, 0.4);
+    }
+    .bg-dark {
+        background: rgba(0, 0, 0, 0.5);
+
+        h1,
+        h2,
+        h3,
+        p {
+            color: white;
+            span {
+                color: $dark-red;
+            }
+        }
+        .grid-1 {
+            .main,
+            .side-1,
+            .side-2 {
+                .detail {
+                    background-color: $dark-red;
+                }
+            }
+        }
+        .side-1 {
+            width: 100%;
+            grid-area: side-1;
+            h2 {
+                color: white;
+                position: absolute;
+                bottom: 0.5rem;
+                left: 0.5rem;
+            }
+        }
+        .side-2 {
+            width: 100%;
+            grid-area: side-2;
+            h2 {
+                color: white;
+                position: absolute;
+                bottom: 0.5rem;
+                left: 0.5rem;
+            }
+        }
     }
     .container {
         position: relative;

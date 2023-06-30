@@ -79,7 +79,7 @@
         background-color: $pink2;
     }
     .dark {
-        background-color: $dark-pink;
+        background-color: $dark-red;
     }
     @keyframes musicAnimation {
         0% {

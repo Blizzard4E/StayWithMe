@@ -1,13 +1,16 @@
 <script>
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import { transitionState } from "../store";
+    import { darkMode, transitionState } from "../store";
     import jwt_decode from "jwt-decode";
     import { user } from "../routes/stores";
 
     let userData;
+    let isDark;
 
     user.subscribe((value) => (userData = value));
+
+    darkMode.subscribe((value) => (isDark = value));
 
     let hotels = [];
 
@@ -94,8 +97,8 @@
     }
 </script>
 
-<h1><span>New</span> Hotels</h1>
-<section>
+<h1 class:dark={isDark}><span>New</span> Hotels</h1>
+<section class:dark={isDark}>
     <button
         class="arrow left-arrow {currentPos === 0 ? 'hide' : ''}"
         on:click={prevSlide}
@@ -133,6 +136,25 @@
 </section>
 
 <style lang="scss">
+    .dark {
+        color: white;
+        span {
+            color: $dark-red;
+        }
+        .arrow {
+            img {
+                filter: invert(70%) sepia(89%) saturate(4718%)
+                    hue-rotate(301deg) brightness(100%) contrast(106%);
+            }
+        }
+        ul {
+            li {
+                &:hover {
+                    background-color: $dark-red;
+                }
+            }
+        }
+    }
     .hide {
         display: none;
     }

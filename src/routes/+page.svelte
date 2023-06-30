@@ -119,7 +119,7 @@
             color: white;
             opacity: 0.9;
             -webkit-text-stroke-width: 2px;
-            -webkit-text-stroke-color: #11151b;
+            -webkit-text-stroke-color: #040507;
             user-select: none;
             span {
                 color: #e21a50;

@@ -151,6 +151,6 @@
     }
     button.dark {
         transition: 0.25s ease-in-out;
-        background-color: $dark-pink;
+        background-color: $dark-red;
     }
 </style>

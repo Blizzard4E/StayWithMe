@@ -4,9 +4,21 @@
     import { user } from "../routes/stores";
     import { onMount } from "svelte";
     import Report from "./Report.svelte";
+    import { darkMode } from "../store";
 
     let userData;
     let hotelReviews = [];
+    let isDark;
+    let emptyStar = "empty_star.png";
+
+    darkMode.subscribe((value) => {
+        isDark = value;
+        if (isDark) {
+            emptyStar = "empty_star_dark.png";
+        } else {
+            emptyStar = "empty_star.png";
+        }
+    });
 
     export let data;
 
@@ -129,90 +141,118 @@
     }
 </script>
 
-<div class="text">
-    <h2>Reviews</h2>
-</div>
-<div class="review">
-    <ul>
-        {#each hotelReviews as review}
-            <li>
-                <div class="review-wrap">
-                    <img
-                        class="profile"
-                        src={review.user_id.profile_pic}
-                        alt=""
-                    />
-                    <div class="comment">
-                        <div class="review-stars">
-                            <h1>{review.user_id.username}</h1>
-                            {#each Array(review.ratings) as _, i}
-                                <img
-                                    class="star"
-                                    src="/images/star.png"
-                                    alt=""
-                                />
-                            {/each}
+<div class:dark={isDark}>
+    <div class="text">
+        <h2>Reviews</h2>
+    </div>
+    <div class="review">
+        <ul>
+            {#each hotelReviews as review}
+                <li>
+                    <div class="review-wrap">
+                        <img
+                            class="profile"
+                            src={review.user_id.profile_pic}
+                            alt=""
+                        />
+                        <div class="comment">
+                            <div class="review-stars">
+                                <h1>{review.user_id.username}</h1>
+                                {#each Array(review.ratings) as _, i}
+                                    <img
+                                        class="star"
+                                        src="/images/star.png"
+                                        alt=""
+                                    />
+                                {/each}
+                            </div>
+                            <p>
+                                {review.feedback}
+                            </p>
                         </div>
-                        <p>
-                            {review.feedback}
-                        </p>
+                        <Report
+                            reviewData={{
+                                user_id: review.user_id.id,
+                                review_id: review.id,
+                            }}
+                        />
                     </div>
-                    <Report
-                        reviewData={{
-                            user_id: review.user_id.id,
-                            review_id: review.id,
-                        }}
-                    />
-                </div>
-            </li>
-        {/each}
-    </ul>
-    <form action="">
-        <h2>Write Your Review</h2>
-        <input type="text" placeholder="Your Review..." bind:value={feedback} />
-        <div class="rating">
-            <h3>Rating</h3>
-            <img
-                src={ratings >= 1
-                    ? "/images/star.png"
-                    : "/images/empty_star.png"}
-                alt=""
-                on:click={() => changeRating(1)}
+                </li>
+            {/each}
+        </ul>
+        <form action="">
+            <h2>Write Your Review</h2>
+            <input
+                type="text"
+                placeholder="Your Review..."
+                bind:value={feedback}
             />
-            <img
-                src={ratings >= 2
-                    ? "/images/star.png"
-                    : "/images/empty_star.png"}
-                alt=""
-                on:click={() => changeRating(2)}
-            />
-            <img
-                src={ratings >= 3
-                    ? "/images/star.png"
-                    : "/images/empty_star.png"}
-                alt=""
-                on:click={() => changeRating(3)}
-            />
-            <img
-                src={ratings >= 4
-                    ? "/images/star.png"
-                    : "/images/empty_star.png"}
-                alt=""
-                on:click={() => changeRating(4)}
-            />
-            <img
-                src={ratings >= 5
-                    ? "/images/star.png"
-                    : "/images/empty_star.png"}
-                alt=""
-                on:click={() => changeRating(5)}
-            />
-        </div>
-        <button on:click|preventDefault={sendReview}>Send</button>
-    </form>
+            <div class="rating">
+                <h3>Rating</h3>
+                <img
+                    src={ratings >= 1
+                        ? "/images/star.png"
+                        : "/images/" + emptyStar}
+                    alt=""
+                    on:click={() => changeRating(1)}
+                />
+                <img
+                    src={ratings >= 2
+                        ? "/images/star.png"
+                        : "/images/" + emptyStar}
+                    alt=""
+                    on:click={() => changeRating(2)}
+                />
+                <img
+                    src={ratings >= 3
+                        ? "/images/star.png"
+                        : "/images/" + emptyStar}
+                    alt=""
+                    on:click={() => changeRating(3)}
+                />
+                <img
+                    src={ratings >= 4
+                        ? "/images/star.png"
+                        : "/images/" + emptyStar}
+                    alt=""
+                    on:click={() => changeRating(4)}
+                />
+                <img
+                    src={ratings >= 5
+                        ? "/images/star.png"
+                        : "/images/" + emptyStar}
+                    alt=""
+                    on:click={() => changeRating(5)}
+                />
+            </div>
+            <button
+                on:click|preventDefault={sendReview}
+                disabled={feedback == ""}>Send</button
+            >
+        </form>
+    </div>
 </div>
 
 <style lang="scss">
+    .dark {
+        .review {
+            form {
+                button {
+                    background-color: $dark-red;
+                }
+            }
+            ul {
+                .review-wrap {
+                    .comment {
+                        background-color: $dark-red;
+                    }
+                    .profile {
+                        border: 2px solid $dark-red;
+                    }
+                }
+            }
+        }
+    }
     .text {
         display: flex;
         justify-content: space-between;
@@ -250,6 +290,14 @@
                 color: white;
                 padding: 0.5rem 1rem;
                 background-color: $pink2;
+                transition: 0.25s ease-in-out;
+                &:hover {
+                    transform: scale(1.1);
+                }
+                &:disabled {
+                    cursor: not-allowed;
+                    transform: scale(1);
+                }
             }
 
             input {
