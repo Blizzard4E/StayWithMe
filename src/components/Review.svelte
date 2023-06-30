@@ -141,7 +141,7 @@
     }
 </script>
 
-<div class:dark={isDark}>
+<div class:dark={isDark == 1}>
     <div class="text">
         <h2>Reviews</h2>
     </div>

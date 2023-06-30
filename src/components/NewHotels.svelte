@@ -97,8 +97,8 @@
     }
 </script>
 
-<h1 class:dark={isDark}><span>New</span> Hotels</h1>
-<section class:dark={isDark}>
+<h1 class:dark={isDark == 1}><span>New</span> Hotels</h1>
+<section class:dark={isDark == 1}>
     <button
         class="arrow left-arrow {currentPos === 0 ? 'hide' : ''}"
         on:click={prevSlide}

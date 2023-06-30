@@ -39,7 +39,7 @@
     }
 </script>
 
-<div class="main-bg" class:bg-dark={isDark}>
+<div class="main-bg" class:bg-dark={isDark == 1}>
     {#if userData}
         <div class="container">
             <h1><span>Top</span> Places</h1>

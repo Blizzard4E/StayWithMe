@@ -34,7 +34,11 @@
 </script>
 
 <audio src="/sounds/idol.mp3" bind:this={music} autoplay loop />
-<button on:click={toggleMusic} class:dark={isDark} class:light={!isDark}>
+<button
+    on:click={toggleMusic}
+    class:dark={isDark == 1}
+    class:light={isDark == 0}
+>
     <img src="/images/musical-note.png" alt="Mute/Unmute Button" />
     <div id="mute" class={muteSign ? "muted" : "unmuted"} />
 </button>

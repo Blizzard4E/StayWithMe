@@ -203,7 +203,7 @@
     }
 </script>
 
-<div class="main-bg" class:dark={isDark}>
+<div class="main-bg" class:dark={isDark == 1}>
     {#if userData}
         <div class="container">
             <div class="profile-grid">

@@ -18,7 +18,7 @@
     });
 </script>
 
-<div class:dark={isDark}>
+<div class:dark={isDark == 1}>
     <img
         class="heart"
         class:out={transitionStateValue}

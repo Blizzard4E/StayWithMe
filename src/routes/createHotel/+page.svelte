@@ -133,7 +133,7 @@
     }
 </script>
 
-<div class="main-bg" class:dark={isDark}>
+<div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
         <form action="">
             <h1><span>Create</span> A Hotel</h1>

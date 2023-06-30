@@ -7,7 +7,7 @@
     darkMode.subscribe((value) => (isDark = value));
 </script>
 
-<div class="bg" class:dark={isDark}>
+<div class="bg" class:dark={isDark == 1}>
     <Navbar />
     <slot />
 </div>

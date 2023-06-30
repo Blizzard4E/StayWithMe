@@ -24,7 +24,11 @@
         canChange = false;
         transitionOut = false;
         setTimeout(() => {
-            darkMode.update((value) => !value);
+            if (isDark == 1) {
+                darkMode.update((value) => 0);
+            } else {
+                darkMode.update((value) => 1);
+            }
         }, 800);
         setTimeout(() => {
             transitionOut = true;
@@ -40,7 +44,7 @@
     }
 </script>
 
-<button on:click={toggleState} class:dark={isDark} disabled={!canChange}>
+<button on:click={toggleState} class:dark={isDark == 1} disabled={!canChange}>
     <img src="/images/heart.png" alt="Mute/Unmute Button" />
     <div class="bg" class:out={transitionOut} class:in={!transitionOut} />
 </button>

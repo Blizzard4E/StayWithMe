@@ -99,7 +99,7 @@
 {:else}
     <BackgroundStarsPink />
 {/if}
-<div class="main-bg" class:bg-dark={isDark}>
+<div class="main-bg" class:bg-dark={isDark == 1}>
     <div class="container">
         <nav>
             <div

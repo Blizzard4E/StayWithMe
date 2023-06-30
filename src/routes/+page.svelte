@@ -27,33 +27,24 @@
 <div>
     <div class="clickable" on:click={home} />
     <div class="content">
-        {#if isDark}
+        {#if isDark == 1}
             <BackgroundStarsRed />
         {:else}
             <BackgroundStars />
         {/if}
-        {#if isDark}
-            <div class="logo logoDark">
-                <h1>S<span>T</span>A<span>Y</span></h1>
-                <h2>
-                    W<span class="medium">I</span><span class="small">TH</span
-                    ><span class="medium">M</span>E
-                </h2>
-            </div>
-        {:else}
-            <div class="logo">
-                <h1>S<span>T</span>A<span>Y</span></h1>
-                <h2>
-                    W<span class="medium">I</span><span class="small">TH</span
-                    ><span class="medium">M</span>E
-                </h2>
-            </div>
-        {/if}
+        <div class="logo" class:logoDark={isDark == 1}>
+            <h1>S<span>T</span>A<span>Y</span></h1>
+            <h2>
+                W<span class="medium">I</span><span class="small">TH</span><span
+                    class="medium">M</span
+                >E
+            </h2>
+        </div>
         <div class="click">
             <p>Click to Continue</p>
         </div>
-        <div class="background" class:light={!isDark} class:dark={isDark}>
-            {#if isDark}
+        <div class="background" class:dark={isDark == 1}>
+            {#if isDark == 1}
                 <ThreeDBackgroundDark />
             {:else}
                 <ThreeDBackground />
@@ -63,7 +54,11 @@
 </div>
 
 <style lang="scss">
-    .light {
+    .background {
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        height: 100vh;
         background: $pink;
     }
     .dark {
@@ -76,12 +71,6 @@
         width: 100%;
         height: 100vh;
         overflow: hidden;
-    }
-    .background {
-        position: relative;
-        z-index: 0;
-        width: 100%;
-        height: 100vh;
     }
     .logo {
         position: fixed;

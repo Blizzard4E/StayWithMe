@@ -154,7 +154,7 @@
     }
 </script>
 
-<div class="main-bg" class:bg-dark={isDark}>
+<div class="main-bg" class:bg-dark={isDark == 1}>
     {#if hotelData}
         <div class="container">
             <div class="grid">

@@ -187,7 +187,7 @@
     }
 </script>
 
-<div class="main-bg" class:dark={isDark}>
+<div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
         <div class="grid">
             <div class="filter">

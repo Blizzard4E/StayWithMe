@@ -43,7 +43,7 @@
     }
 </script>
 
-<div class="main-bg" class:dark={isDark}>
+<div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
         <form>
             <h1><span>L</span>ogin</h1>
