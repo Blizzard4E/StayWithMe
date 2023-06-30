@@ -8,18 +8,19 @@
     let imageName = "ai.jpg";
     let canChange = true;
 
-    darkMode.subscribe((value) => (isDark = value));
+    darkMode.subscribe((value) => {
+        isDark = value;
+        if (isDark == 0) {
+            imageName = "aidol.png";
+        } else if (isDark == 1) {
+            imageName = "ai.jpg";
+        }
+    });
 
     function toggleState() {
         transition();
     }
-    onMount(() => {
-        if (isDark == 0) {
-            imageName = "aidol.png";
-        } else {
-            imageName = "ai.jpg";
-        }
-    });
+    onMount(() => {});
     function transition() {
         canChange = false;
         transitionOut = false;
