@@ -14,7 +14,7 @@
         transition();
     }
     onMount(() => {
-        if (isDark) {
+        if (isDark == 0) {
             imageName = "aidol.png";
         } else {
             imageName = "ai.jpg";
