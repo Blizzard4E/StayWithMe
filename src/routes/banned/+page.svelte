@@ -41,6 +41,9 @@
 <style lang="scss">
     .main-bg {
         background-color: rgba(255, 255, 255, 0.4);
+        position: relative;
+        z-index: 2;
+        width: 100%;
     }
     .dark {
         background-color: rgba(0, 0, 0, 0.5);
