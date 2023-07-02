@@ -192,41 +192,15 @@
             />
             <div class="rating">
                 <h3>Rating</h3>
-                <img
-                    src={ratings >= 1
-                        ? "/images/star.png"
-                        : "/images/" + emptyStar}
-                    alt=""
-                    on:click={() => changeRating(1)}
-                />
-                <img
-                    src={ratings >= 2
-                        ? "/images/star.png"
-                        : "/images/" + emptyStar}
-                    alt=""
-                    on:click={() => changeRating(2)}
-                />
-                <img
-                    src={ratings >= 3
-                        ? "/images/star.png"
-                        : "/images/" + emptyStar}
-                    alt=""
-                    on:click={() => changeRating(3)}
-                />
-                <img
-                    src={ratings >= 4
-                        ? "/images/star.png"
-                        : "/images/" + emptyStar}
-                    alt=""
-                    on:click={() => changeRating(4)}
-                />
-                <img
-                    src={ratings >= 5
-                        ? "/images/star.png"
-                        : "/images/" + emptyStar}
-                    alt=""
-                    on:click={() => changeRating(5)}
-                />
+                {#each Array(5) as _, i}
+                    <img
+                        src={ratings >= i + 1
+                            ? "/images/star.png"
+                            : "/images/" + emptyStar}
+                        alt=""
+                        on:click={() => changeRating(i + 1)}
+                    />
+                {/each}
             </div>
             <button
                 on:click|preventDefault={sendReview}
