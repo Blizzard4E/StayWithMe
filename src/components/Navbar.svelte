@@ -51,6 +51,9 @@
                     } else {
                         hotel.update((value) => decoded);
                     }
+                    if (decoded.banned) {
+                        transition("/banned");
+                    }
                 }
                 console.log(jsonData);
             })
@@ -58,19 +61,10 @@
     }
 
     onMount(() => {
-        if (document.cookie.indexOf("refreshToken") >= 0) {
-            const token = ("; " + document.cookie)
-                .split(`; refreshToken=`)
-                .pop()
-                .split(";")[0];
-            const decodedToken = jwt_decode(token);
-            if (decodedToken.is_user) {
-                is_user.update((value) => true);
-            } else is_user.update((value) => false);
-        }
         if (
             $page.url.pathname == "/signUp" ||
-            $page.url.pathname == "/createHotel"
+            $page.url.pathname == "/createHotel" ||
+            $page.url.pathname == "/banned"
         )
             return;
         autoLogin();
@@ -88,13 +82,13 @@
 </script>
 
 <div class="objects">
-    {#if isDark}
+    {#if isDark == 1}
         <ThreeDBackgroundVerticalDark />
     {:else}
         <ThreeDBackgroundVertical />
     {/if}
 </div>
-{#if isDark}
+{#if isDark == 1}
     <BackgroundStarsRedBehind />
 {:else}
     <BackgroundStarsPink />

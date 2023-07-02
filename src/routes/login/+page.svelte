@@ -8,8 +8,34 @@
     let email = "",
         password = "",
         failed = false;
+    let emailError = false;
+    let emailInvalid = true;
+    let isLoading = false;
+    let passwordError = false;
+
+    function emailValidation() {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            emailInvalid = false;
+        } else {
+            emailInvalid = true;
+        }
+    }
+
+    function passwordValidation() {
+        if (password.length <= 0) passwordError = true;
+        else passwordError = false;
+    }
 
     async function login() {
+        passwordValidation();
+        if (emailInvalid) {
+            emailError = true;
+            return;
+        }
+        if (passwordError) {
+            return;
+        }
+        isLoading = true;
         fetch("https://stay-withme-api.cyclic.app/login", {
             method: "POST",
             headers: {
@@ -26,7 +52,10 @@
                         jsonData.refreshToken
                     );
                     transition("/home");
-                } else failed = true;
+                } else {
+                    failed = true;
+                    isLoading = false;
+                }
                 console.log(jsonData);
             })
             .catch((error) => console.error("Error:", error));
@@ -45,24 +74,47 @@
 
 <div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
-        <form>
+        <form on:submit|preventDefault={login}>
             <h1><span>L</span>ogin</h1>
             <h3>Email</h3>
             <div>
-                <input type="text" placeholder="Email" bind:value={email} />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    bind:value={email}
+                    on:input={emailValidation}
+                />
+                {#if emailError && emailInvalid}
+                    <p class="error">Invalid Email</p>
+                {/if}
             </div>
             <h3>Password</h3>
             <div>
                 <input
-                    type="text"
+                    type="password"
                     placeholder="Password"
                     bind:value={password}
+                    on:input={passwordValidation}
                 />
+                {#if passwordError}
+                    <p class="error">Password must not be empty</p>
+                {/if}
             </div>
             {#if failed}
-                <p class="fail">Wrong Email or Password</p>
+                <p class="error">Wrong Email or Password</p>
             {/if}
-            <button on:click={login}>Login</button>
+            <button disabled={isLoading}>Login</button>
+            {#if isLoading}
+                <div class="loading">
+                    <div class="lds-ring">
+                        <div />
+                        <div />
+                        <div />
+                        <div />
+                    </div>
+                    <p>Logging In</p>
+                </div>
+            {/if}
         </form>
     </div>
 </div>
@@ -88,9 +140,16 @@
                 background-color: $dark-red;
             }
         }
+        .error {
+            color: white;
+            background-color: red;
+        }
     }
-    .fail {
+    .error {
         color: red;
+        font-size: 0.9rem;
+        width: max-content;
+        margin-top: 0.25rem;
     }
     .role {
         margin-bottom: 1rem;
@@ -128,7 +187,7 @@
             }
         }
         button {
-            margin-top: 0.5rem;
+            margin: 1rem 0;
             padding: 0.5rem 0.75rem;
             background-color: $pink2;
             color: white;
@@ -136,8 +195,12 @@
             border: none;
             font-size: 1rem;
             transition: 0.15s ease-in-out;
+            cursor: pointer;
             &:hover {
                 transform: scale(1.1);
+            }
+            &:disabled {
+                cursor: wait;
             }
         }
     }

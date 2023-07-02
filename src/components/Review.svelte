@@ -10,6 +10,7 @@
     let hotelReviews = [];
     let isDark;
     let emptyStar = "empty_star.png";
+    let isLoading = false;
 
     darkMode.subscribe((value) => {
         isDark = value;
@@ -74,6 +75,7 @@
             transition("/login");
         });
         if (tokenCheck) {
+            isLoading = true;
             fetch("https://stay-withme-api.cyclic.app/users/review", {
                 method: "POST",
                 headers: {
@@ -92,6 +94,7 @@
                     if (jsonData.status == 200) {
                         ratings = 5;
                         feedback = "";
+                        isLoading = false;
                         getAllReviews();
                     }
                     console.log(jsonData);
@@ -147,7 +150,7 @@
     </div>
     <div class="review">
         <ul>
-            {#each hotelReviews as review}
+            {#each hotelReviews as review, i (review)}
                 <li>
                     <div class="review-wrap">
                         <img
@@ -229,6 +232,17 @@
                 on:click|preventDefault={sendReview}
                 disabled={feedback == ""}>Send</button
             >
+            {#if isLoading}
+                <div class="loading">
+                    <div class="lds-ring">
+                        <div />
+                        <div />
+                        <div />
+                        <div />
+                    </div>
+                    <p>Submitting Review</p>
+                </div>
+            {/if}
         </form>
     </div>
 </div>

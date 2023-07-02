@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { transitionState } from "../store";
+    import { darkMode, transitionState } from "../store";
     import HotelBenefits from "./HotelBenefits.svelte";
     import HotelImageUpdate from "./HotelImageUpdate.svelte";
     import { goto } from "$app/navigation";
@@ -9,6 +9,10 @@
     import HotelInfo from "./HotelInfo.svelte";
     let hotelData;
     let onGoingBookings = [];
+    let isDark;
+
+    darkMode.subscribe((value) => (isDark = value));
+
     let roomsData = [],
         roomNumber = 0,
         roomBeds = 1,
@@ -236,7 +240,7 @@
     }
 </script>
 
-<div class="container">
+<div class="container" class:dark={isDark == 1}>
     <div class="grid">
         <section class="create-room">
             <h1>Create Room</h1>
@@ -326,6 +330,31 @@
 </div>
 
 <style lang="scss">
+    .dark {
+        color: white;
+        .create-room {
+            p {
+                color: white;
+                background-color: red;
+            }
+            button {
+                background-color: $dark-red;
+            }
+        }
+        ul {
+            li {
+                button {
+                    background-color: $dark-red;
+                }
+                &:hover {
+                    background-color: $dark-red;
+                    .checkout {
+                        color: $dark-red;
+                    }
+                }
+            }
+        }
+    }
     .bookInfo {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -363,6 +392,7 @@
     .create-room {
         p {
             color: red;
+            width: max-content;
         }
         input {
             width: 200px;
@@ -435,7 +465,6 @@
                 transform: scale(1.1);
                 z-index: 4;
                 button {
-                    color: black;
                     background-color: white;
                 }
                 .reject {
@@ -482,7 +511,6 @@
         z-index: 2;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        background-color: rgba(252, 247, 247, 0.7);
     }
     * {
         font-family: "Poppins", sans-serif;

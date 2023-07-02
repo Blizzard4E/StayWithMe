@@ -1,7 +1,5 @@
 import { writable } from "svelte/store";
 
-export const transitionState = writable(false);
-
 export const user = writable(null);
 
 export const hotel = writable(null);

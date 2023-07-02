@@ -2,6 +2,7 @@
     import { hotel } from "../routes/stores";
     import jwt_decode from "jwt-decode";
     import { goto } from "$app/navigation";
+    import { darkMode } from "../store";
     const countries = [
         "Bangladesh",
         "Brazil",
@@ -36,6 +37,11 @@
 
     let hotelData;
     let name, description, country, googleMap;
+
+    let isDark;
+    let isLoading = false;
+
+    darkMode.subscribe((value) => (isDark = value));
 
     hotel.subscribe((value) => {
         hotelData = value;
@@ -94,6 +100,7 @@
             transition("/login");
         });
         if (tokenCheck) {
+            isLoading = true;
             fetch("https://stay-withme-api.cyclic.app/hotels/update", {
                 method: "POST",
                 headers: {
@@ -117,6 +124,7 @@
                         hotelData.country = country;
                         hotelData.googleMap = googleMap;
                         hotel.update((value) => hotelData);
+                        isLoading = false;
                     }
                 });
         }
@@ -130,7 +138,7 @@
 </script>
 
 {#if hotelData}
-    <section>
+    <section class:dark={isDark == 1}>
         <h1>Hotel Name</h1>
         <input type="text" bind:value={name} />
         <h1>Description</h1>
@@ -158,6 +166,17 @@
             />
         </div>
         <div><button on:click={updateInfo}>Update Info</button></div>
+        {#if isLoading}
+            <div class="loading" style="margin-top: .5rem;">
+                <div class="lds-ring">
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                </div>
+                <p>Updating Hotel Info</p>
+            </div>
+        {/if}
     </section>
 {/if}
 
@@ -167,6 +186,7 @@
     }
     h1 {
         font-size: 1.4rem;
+        margin-bottom: 0.5rem;
     }
     button {
         padding: 0.75rem 1rem;
@@ -189,6 +209,9 @@
             outline: none;
             box-shadow: none;
         }
+    }
+    section {
+        margin-top: 1rem;
     }
     select {
         width: auto;

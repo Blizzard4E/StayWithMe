@@ -16,6 +16,7 @@
     let ratingsHigh = false;
     let ratingsLow = false;
     let isDark;
+    let isLoading = false;
 
     darkMode.subscribe((value) => (isDark = value));
 
@@ -105,6 +106,7 @@
                     transition("/login");
                 });
                 if (tokenCheck) {
+                    isLoading = true;
                     fetch(
                         "https://stay-withme-api.cyclic.app/users/searchHotels",
                         {
@@ -122,6 +124,7 @@
                         .then((jsonData) => {
                             if (jsonData.status == 200) {
                                 searchResults = jsonData.data;
+                                isLoading = false;
                                 applySearchText();
                             }
                             console.log(jsonData);
@@ -250,6 +253,18 @@
                     </select>
                 </div>
                 <h2 style="margin-top: 2rem;">Hotels</h2>
+                {#if isLoading}
+                    <div class="loader">
+                        <div class="loading">
+                            <div class="lds-ring">
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                            </div>
+                        </div>
+                    </div>
+                {/if}
                 <ul>
                     {#each searchTextResults as hotel}
                         <li on:click={() => transition("/hotel/" + hotel.id)}>
@@ -292,6 +307,12 @@
         background-color: rgba(255, 255, 255, 0.4);
         width: 100%;
         min-height: 100vh;
+    }
+    .loader {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        height: 100%;
     }
     .dark {
         background-color: rgba(0, 0, 0, 0.5);
@@ -359,6 +380,7 @@
     .grid {
         display: grid;
         grid-template-columns: 1fr 2fr;
+        width: 100%;
     }
     .benefits {
         span {

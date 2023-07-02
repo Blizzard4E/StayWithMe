@@ -11,6 +11,8 @@
     let userData;
     let isDark;
 
+    let isLoading = false;
+
     darkMode.subscribe((value) => {
         isDark = value;
     });
@@ -115,6 +117,7 @@
             transition("/login");
         });
         if (tokenCheck) {
+            isLoading = true;
             fetch("https://stay-withme-api.cyclic.app/users/bookRoom", {
                 method: "POST",
                 headers: {
@@ -136,6 +139,7 @@
                         getHotelInfo();
                         selectedRoom = null;
                         days = 1;
+                        isLoading = false;
                     }
                 });
         }
@@ -251,6 +255,17 @@
                 </ul>
             </div>
             <div class="booking">
+                {#if isLoading}
+                    <div class="loading">
+                        <div class="lds-ring">
+                            <div />
+                            <div />
+                            <div />
+                            <div />
+                        </div>
+                        <p>Booking room</p>
+                    </div>
+                {/if}
                 <div>
                     <h3>Days</h3>
                     <input type="number" bind:value={days} />
@@ -262,7 +277,7 @@
                 <button
                     class="book"
                     on:click={bookRoom}
-                    disabled={!selectedRoom}>Book Room</button
+                    disabled={!selectedRoom || isLoading}>Book Room</button
                 >
             </div>
             <Review {data} />
@@ -312,6 +327,16 @@
                 background-color: $dark-red;
             }
         }
+        .error {
+            color: white;
+            background-color: red;
+        }
+    }
+    .error {
+        color: red;
+        font-size: 0.9rem;
+        width: max-content;
+        margin-top: 0.25rem;
     }
     .booking {
         display: flex;

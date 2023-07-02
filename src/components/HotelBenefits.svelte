@@ -2,6 +2,7 @@
     import { hotel } from "../routes/stores";
     import jwt_decode from "jwt-decode";
     import { goto } from "$app/navigation";
+    import { darkMode } from "../store";
     const benefits = [
         "Bedroom",
         "Bathroom",
@@ -22,6 +23,11 @@
 
     let hotelData;
     let selectedBenefits = [];
+
+    let isDark;
+    let isLoading = false;
+
+    darkMode.subscribe((value) => (isDark = value));
 
     hotel.subscribe((value) => {
         hotelData = value;
@@ -77,6 +83,7 @@
             transition("/login");
         });
         if (tokenCheck) {
+            isLoading = true;
             fetch("https://stay-withme-api.cyclic.app/hotels/update", {
                 method: "POST",
                 headers: {
@@ -94,6 +101,7 @@
                     if (jsonData.status == 200) {
                         hotelData.benefits = selectedBenefits;
                         hotel.update((value) => hotelData);
+                        isLoading = false;
                     }
                 });
         }
@@ -107,8 +115,8 @@
 </script>
 
 {#if hotelData}
-    <section>
-        <h1>Benefits</h1>
+    <section class:dark={isDark == 1}>
+        <h1>Benefits - {hotelData.benefits.length}</h1>
         <ul>
             {#each benefits as benefit}
                 <li class:active={selectedBenefits.includes(benefit)}>
@@ -125,10 +133,43 @@
             {/each}
         </ul>
         <button on:click={updateBenefits}>Update Benefits</button>
+        {#if isLoading}
+            <div class="loading" style="margin-top: .5rem;">
+                <div class="lds-ring">
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                </div>
+                <p>Updating Benefits</p>
+            </div>
+        {/if}
     </section>
 {/if}
 
 <style lang="scss">
+    .dark {
+        ul {
+            li {
+                border: 1px solid white;
+                &:hover {
+                    transform: scale(1.2);
+                    border: 1px solid $dark-red;
+                    color: $dark-red;
+                }
+            }
+            .active {
+                background-color: $dark-red;
+                border: 1px solid $dark-red;
+                color: white;
+
+                &:hover {
+                    background-color: $dark-red;
+                    color: white;
+                }
+            }
+        }
+    }
     button {
         padding: 0.75rem 1rem;
         background-color: rgb(25, 151, 255);
@@ -143,6 +184,7 @@
         }
     }
     ul {
+        margin-top: 1rem;
         position: relative;
         display: flex;
         flex-wrap: wrap;
@@ -153,6 +195,7 @@
             place-items: center;
             border: 1px solid black;
             transition: 0.15s ease-in-out;
+            cursor: pointer;
             &:hover {
                 transform: scale(1.2);
                 border: 1px solid $pink2;
@@ -171,7 +214,7 @@
         }
         label {
             padding: 0.25rem 0.5rem;
-
+            cursor: pointer;
             input {
                 width: 0;
                 opacity: 0;

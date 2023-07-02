@@ -49,8 +49,53 @@
         img_2,
         img_3,
         img_4;
-
+    let emailError = false,
+        emailInvalid = true,
+        nameError = false,
+        passwordError = false,
+        descError = false,
+        imagesError = false,
+        googleMapError = false;
     let images = [];
+    let isLoading = false;
+    let loadingText = "";
+    let createError = false;
+
+    function emailValidation() {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            emailInvalid = false;
+        } else {
+            emailInvalid = true;
+        }
+    }
+
+    function nameValidation() {
+        if (name.length <= 0) nameError = true;
+        else nameError = false;
+    }
+
+    function passwordValidation() {
+        if (password.length <= 0) passwordError = true;
+        else passwordError = false;
+    }
+
+    function descValidation() {
+        if (description.length <= 0) descError = true;
+        else descError = false;
+    }
+
+    function googleMapValidation() {
+        if (googleMap.length <= 0) googleMapError = true;
+        else googleMapError = false;
+    }
+
+    function imagesValidation() {
+        if (cover_img && img_1 && img_2 && img_3 && img_4) {
+            imagesError = false;
+            return;
+        }
+        imagesError = true;
+    }
 
     async function uploadImage(file) {
         let formData = new FormData();
@@ -89,9 +134,30 @@
     }
 
     async function signUp() {
-        console.log("Requesting");
-        const uploadedImages = await uploadImages();
+        nameValidation();
+        emailValidation();
+        passwordValidation();
+        descValidation();
+        googleMapValidation();
+        imagesValidation();
+        if (emailInvalid) {
+            emailError = true;
+            return;
+        }
+        if (
+            nameError ||
+            passwordError ||
+            descError ||
+            googleMapError ||
+            imagesError
+        ) {
+            return;
+        }
 
+        isLoading = true;
+        loadingText = "Uploading Images";
+        const uploadedImages = await uploadImages();
+        loadingText = "Creating Hotel";
         fetch("https://stay-withme-api.cyclic.app/hotels/signUp", {
             method: "POST",
             headers: {
@@ -116,10 +182,19 @@
                         jsonData.refreshToken
                     );
                     transition("/home");
-                } else failed = true;
+                } else {
+                    isLoading = false;
+                    createError = true;
+                    loadingText = jsonData.message;
+                }
                 console.log(jsonData);
             })
-            .catch((error) => console.error("Error:", error));
+            .catch((error) => {
+                isLoading = false;
+                createError = true;
+                loadingText = error;
+                console.log(error);
+            });
     }
 
     onMount(() => {
@@ -135,23 +210,43 @@
 
 <div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
-        <form action="">
+        <form on:submit|preventDefault={signUp}>
             <h1><span>Create</span> A Hotel</h1>
-            <h3>Name</h3>
+            <h3>Hotel Name</h3>
             <div>
-                <input type="text" placeholder="Name" bind:value={name} />
+                <input
+                    type="text"
+                    placeholder="Name"
+                    bind:value={name}
+                    on:input={nameValidation}
+                />
+                {#if nameError}
+                    <p class="error">Hotel Name must not be empty</p>
+                {/if}
             </div>
             <h3>Email</h3>
             <div>
-                <input type="text" placeholder="Email" bind:value={email} />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    bind:value={email}
+                    on:input={emailValidation}
+                />
+                {#if emailError && emailInvalid}
+                    <p class="error">Invalid email</p>
+                {/if}
             </div>
             <h3>Password</h3>
             <div>
                 <input
-                    type="text"
+                    type="password"
                     placeholder="Password"
                     bind:value={password}
+                    on:input={passwordValidation}
                 />
+                {#if passwordError}
+                    <p class="error">Password must not be empty</p>
+                {/if}
             </div>
             <h3>Description</h3>
             <div>
@@ -159,7 +254,11 @@
                     type="text"
                     placeholder="Description"
                     bind:value={description}
+                    on:input={descValidation}
                 />
+                {#if descError}
+                    <p class="error">Description must not be empty</p>
+                {/if}
             </div>
             <h3>Country</h3>
             <label for="country">Country:</label>
@@ -174,7 +273,11 @@
                     type="text"
                     placeholder="Google Map Link"
                     bind:value={googleMap}
+                    on:input={googleMapValidation}
                 />
+                {#if googleMapError}
+                    <p class="error">Google Map Name must not be empty</p>
+                {/if}
             </div>
             <iframe
                 src={"https://maps.google.com/maps?&q=" +
@@ -188,16 +291,63 @@
                 referrerpolicy="no-referrer-when-downgrade"
             />
             <h3>Cover Image</h3>
-            <div><input type="file" bind:files={cover_img} /></div>
+            <div>
+                <input
+                    type="file"
+                    bind:files={cover_img}
+                    on:change={imagesValidation}
+                />
+            </div>
             <h3>Image 1</h3>
-            <div><input type="file" bind:files={img_1} /></div>
+            <div>
+                <input
+                    type="file"
+                    bind:files={img_1}
+                    on:change={imagesValidation}
+                />
+            </div>
             <h3>Image 2</h3>
-            <div><input type="file" bind:files={img_2} /></div>
+            <div>
+                <input
+                    type="file"
+                    bind:files={img_2}
+                    on:change={imagesValidation}
+                />
+            </div>
             <h3>Image 3</h3>
-            <div><input type="file" bind:files={img_3} /></div>
+            <div>
+                <input
+                    type="file"
+                    bind:files={img_3}
+                    on:change={imagesValidation}
+                />
+            </div>
             <h3>Image 4</h3>
-            <div><input type="file" bind:files={img_4} /></div>
-            <button on:click={signUp}>Create</button>
+            <div>
+                <input
+                    type="file"
+                    bind:files={img_4}
+                    on:change={imagesValidation}
+                />
+            </div>
+            {#if imagesError}
+                <p class="error">All images must be provided</p>
+            {/if}
+            {#if createError}
+                <p class="error">An account with this email already exist</p>
+            {/if}
+            <button disabled={isLoading}>Create</button>
+            {#if isLoading}
+                <div class="loading">
+                    <div class="lds-ring">
+                        <div />
+                        <div />
+                        <div />
+                        <div />
+                    </div>
+                    <p>{loadingText}</p>
+                </div>
+            {/if}
         </form>
     </div>
 </div>
@@ -234,6 +384,16 @@
                 background-color: $dark-red;
             }
         }
+        .error {
+            color: white;
+            background-color: red;
+        }
+    }
+    .error {
+        color: red;
+        font-size: 0.9rem;
+        width: max-content;
+        margin-top: 0.25rem;
     }
     * {
         font-family: "Poppins", sans-serif;
@@ -248,7 +408,7 @@
             }
         }
         button {
-            margin-top: 1rem;
+            margin: 1rem 0;
             padding: 0.5rem 0.75rem;
             background-color: $pink2;
             color: white;
@@ -256,8 +416,12 @@
             border: none;
             font-size: 1rem;
             transition: 0.15s ease-in-out;
+            cursor: pointer;
             &:hover {
                 transform: scale(1.1);
+            }
+            &:disabled {
+                cursor: wait;
             }
         }
     }

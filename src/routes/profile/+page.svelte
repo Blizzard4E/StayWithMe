@@ -17,6 +17,9 @@
     let editBio;
     let editProfilePic;
 
+    let isLoading = false,
+        loadingText = "";
+
     user.subscribe((value) => {
         userData = value;
         getInfo();
@@ -105,26 +108,30 @@
     async function uploadImage() {
         return new Promise(async (resolve, reject) => {
             if (editProfilePic) {
-                let formData = new FormData();
-                formData.append("file", editProfilePic[0]);
-                formData.append("upload_preset", data.preset_name);
-                formData.append("api_key", data.cloud_api_key);
-
-                fetch(
-                    "https://api.cloudinary.com/v1_1/" +
-                        data.cloud_name +
-                        "/upload",
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                )
-                    .then((res) => res.json())
-                    .then((image) => {
-                        console.log("Uploaded New Profile Image");
-                        resolve(image.url);
-                    })
-                    .catch((err) => reject(err));
+                if (editProfilePic[0]) {
+                    let formData = new FormData();
+                    formData.append("file", editProfilePic[0]);
+                    formData.append("upload_preset", data.preset_name);
+                    formData.append("api_key", data.cloud_api_key);
+                    loadingText = "Uploading Image";
+                    fetch(
+                        "https://api.cloudinary.com/v1_1/" +
+                            data.cloud_name +
+                            "/upload",
+                        {
+                            method: "POST",
+                            body: formData,
+                        }
+                    )
+                        .then((res) => res.json())
+                        .then((image) => {
+                            console.log("Uploaded New Profile Image");
+                            resolve(image.url);
+                        })
+                        .catch((err) => reject(err));
+                } else {
+                    resolve(null);
+                }
             } else {
                 resolve(null);
             }
@@ -139,7 +146,9 @@
                 transition("/login");
             });
             if (tokenCheck) {
+                isLoading = true;
                 const profileImgLink = await uploadImage().catch((err) => {
+                    isLoading = false;
                     return console.log(err);
                 });
                 let newData = {
@@ -155,6 +164,7 @@
                 if (editName.length > 0) {
                     newData.username = editName;
                 }
+                loadingText = "Updating Profile";
                 fetch("https://stay-withme-api.cyclic.app/users/update", {
                     method: "POST",
                     headers: {
@@ -175,6 +185,8 @@
                                 userData.username = editName;
                             }
                             user.update((value) => userData);
+                            loadingText = "";
+                            isLoading = false;
                             toggleEdit();
                         }
                         console.log(jsonData);
@@ -229,9 +241,22 @@
                     {/if}
 
                     <div class="btn">
+                        {#if isLoading}
+                            <div class="loading">
+                                <div class="lds-ring">
+                                    <div />
+                                    <div />
+                                    <div />
+                                    <div />
+                                </div>
+                                <p>{loadingText}</p>
+                            </div>
+                        {/if}
                         {#if editMode}
-                            <button class="confirm" on:click={updateUser}
-                                >Confirm</button
+                            <button
+                                class="confirm"
+                                on:click={updateUser}
+                                disabled={isLoading}>Confirm</button
                             >
                         {/if}
                         <button class="edit" on:click={toggleEdit}>
@@ -348,6 +373,10 @@
                         border: 1px solid $dark-red;
                         background-color: $dark-red;
                     }
+                }
+                .current {
+                    border: 1px solid $dark-red;
+                    background-color: $dark-red;
                 }
             }
         }
@@ -511,16 +540,20 @@
         bottom: 0;
         right: 0;
         position: absolute;
+        display: flex;
+        column-gap: 0.5rem;
         button {
             padding: 0.25rem 0.5rem;
             border: none;
             color: white;
             font-size: 1.1rem;
-            margin-left: 0.5rem;
             transition: 0.15s ease-in-out;
             cursor: pointer;
             &:hover {
                 transform: scale(1.1);
+            }
+            &:disabled {
+                cursor: wait;
             }
         }
         .confirm {
