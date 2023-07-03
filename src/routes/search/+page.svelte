@@ -142,19 +142,39 @@
     }
 
     function applyFilter() {
+        let newArray = searchTextResults.slice();
         if (alphabetical) {
-            searchTextResults = searchTextResults.sort();
+            newArray.sort((a, b) => {
+                const nameA = a.name.toUpperCase();
+                const nameB = b.name.toUpperCase();
+
+                if (nameA > nameB) {
+                    return 1;
+                } else if (nameA < nameB) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
         } else if (notAlphabetical) {
-            searchTextResults = searchTextResults.reverse();
+            newArray.sort((a, b) => {
+                const nameA = a.name.toUpperCase();
+                const nameB = b.name.toUpperCase();
+
+                if (nameA < nameB) {
+                    return 1;
+                } else if (nameA > nameB) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
         } else if (ratingsHigh) {
-            searchTextResults = searchTextResults.sort(
-                (a, b) => b.ratings - a.ratings
-            );
+            newArray = newArray.sort((a, b) => b.ratings - a.ratings);
         } else if (ratingsLow) {
-            searchTextResults = searchTextResults.sort(
-                (a, b) => a.ratings - b.ratings
-            );
+            newArray = newArray.sort((a, b) => a.ratings - b.ratings);
         }
+        searchTextResults = newArray.slice();
         console.log("Filtered");
         console.log(searchTextResults);
     }
@@ -266,7 +286,7 @@
                     </div>
                 {/if}
                 <ul>
-                    {#each searchTextResults as hotel}
+                    {#each searchTextResults as hotel, i}
                         <li on:click={() => transition("/hotel/" + hotel.id)}>
                             <img src={hotel.images[4]} alt="" />
                             <div class="info">
