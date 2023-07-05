@@ -143,8 +143,8 @@
         }
         .arrow {
             img {
-                filter: invert(70%) sepia(89%) saturate(4718%)
-                    hue-rotate(301deg) brightness(100%) contrast(106%);
+                filter: invert(24%) sepia(71%) saturate(4689%)
+                    hue-rotate(332deg) brightness(88%) contrast(100%);
             }
         }
         ul {
