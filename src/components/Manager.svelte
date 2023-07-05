@@ -343,6 +343,7 @@
         }
         ul {
             li {
+                border: 1px solid white;
                 button {
                     background-color: $dark-red;
                 }
