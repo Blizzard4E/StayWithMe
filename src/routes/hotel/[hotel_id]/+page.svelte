@@ -228,11 +228,12 @@
                 <h2>Rooms</h2>
                 <ul>
                     {#each roomsData as room}
-                        <li
+                        <button
                             on:click={selectRoom(room)}
                             class={room.availability == 1
                                 ? "available"
                                 : "occupied"}
+                            disabled={room.availability == 0}
                             class:active={selectedRoom?.id == room.id}
                         >
                             <h3>Room: {room.number}</h3>
@@ -250,7 +251,7 @@
                             <p>
                                 Price: ${room.price}
                             </p>
-                        </li>
+                        </button>
                     {/each}
                 </ul>
             </div>
@@ -469,16 +470,22 @@
             grid-template-columns: repeat(7, 1fr);
             column-gap: 1rem;
             row-gap: 1rem;
-            li {
+            button {
+                text-align: start;
                 cursor: pointer;
                 padding: 0.75rem;
                 transition: 0.15s ease-in-out;
+                background: none;
+                border: none;
 
                 h3 {
                     font-size: 1.1rem;
                 }
                 p {
                     font-size: 0.85rem;
+                }
+                &:disabled {
+                    color: black;
                 }
             }
             .occupied {
@@ -487,6 +494,7 @@
             }
             .available {
                 border: 1px solid grey;
+                background: none;
                 &:hover {
                     border: none;
                     background-color: $pink2;

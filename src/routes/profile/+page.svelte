@@ -315,11 +315,12 @@
                         {#each reviewsData as review}
                             <li>
                                 <div class="message">
-                                    <img
-                                        class="profile"
-                                        src={userData.profile_pic}
-                                        alt=""
-                                    />
+                                    <div class="profile">
+                                        <img
+                                            src={userData.profile_pic}
+                                            alt=""
+                                        />
+                                    </div>
                                     <div
                                         class="comment"
                                         on:click={() =>
@@ -426,17 +427,25 @@
                 display: flex;
             }
             .message {
-                display: flex;
-                align-items: flex-end;
+                display: grid;
+                grid-template-columns: 60px 1fr;
                 column-gap: 0.5rem;
                 transition: 0.15s ease-in-out;
                 cursor: pointer;
+
                 .profile {
                     border: 2px solid $pink2;
                     width: 52px;
-                    height: 52px;
-                    object-fit: cover;
-                    border-radius: 50%;
+                    aspect-ratio: 1/1;
+                    align-self: flex-end;
+
+                    img {
+                        width: 100%;
+                        display: block;
+                        aspect-ratio: 1/1;
+                        object-fit: cover;
+                        border-radius: 50%;
+                    }
                 }
                 .review-stars {
                     display: flex;
@@ -454,6 +463,7 @@
                     font-size: 1rem;
                 }
                 .comment {
+                    width: 100%;
                     background-color: $pink2;
                     padding: 0.5rem;
                     border-radius: 14px;

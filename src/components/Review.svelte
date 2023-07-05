@@ -14,7 +14,7 @@
 
     darkMode.subscribe((value) => {
         isDark = value;
-        if (isDark) {
+        if (isDark == 1) {
             emptyStar = "empty_star_dark.png";
         } else {
             emptyStar = "empty_star.png";
