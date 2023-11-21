@@ -1,9 +1,4 @@
-import {
-    CLOUD_NAME,
-    PRESET_NAME,
-    CLOUD_API_KEY,
-    PUBLIC_API_URL,
-} from "$env/static/private";
+import { CLOUD_NAME, PRESET_NAME, CLOUD_API_KEY } from "$env/static/private";
 
 export async function load() {
     return {
