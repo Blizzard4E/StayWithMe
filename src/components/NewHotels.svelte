@@ -4,7 +4,7 @@
     import { darkMode, transitionState } from "../store";
     import jwt_decode from "jwt-decode";
     import { user } from "../routes/stores";
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     let userData;
     let isDark;
 
@@ -26,7 +26,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -61,18 +61,15 @@
             transition("/login");
         });
         if (tokenCheck) {
-            const response = await fetch(
-                "https://stay-withme-api.cyclic.app/users/getHotels",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        token: localStorage.getItem("access_token"),
-                    }),
-                }
-            );
+            const response = await fetch(PUBLIC_API_URL + "/users/getHotels", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token: localStorage.getItem("access_token"),
+                }),
+            });
             const jsonData = await response.json();
 
             if (jsonData.status == 200) {
@@ -97,7 +94,10 @@
     }
 </script>
 
-<h1 class:dark={isDark == 1}><span>New</span> Hotels</h1>
+<h1 class:dark={isDark == 1}>
+    <span>New</span>
+    Hotels
+</h1>
 <section class:dark={isDark == 1}>
     <button
         class="arrow left-arrow {currentPos === 0 ? 'hide' : ''}"

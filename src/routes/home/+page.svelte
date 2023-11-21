@@ -8,7 +8,6 @@
     import { goto } from "$app/navigation";
     import Manager from "../../components/Manager.svelte";
     import { user, hotel, country } from "../stores";
-
     export let data;
 
     let userData;
@@ -42,7 +41,10 @@
 <div class="main-bg" class:bg-dark={isDark == 1}>
     {#if userData}
         <div class="container">
-            <h1><span>Top</span> Places</h1>
+            <h1>
+                <span>Top</span>
+                 Places
+            </h1>
             <div class="grid-1">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div class="main" on:click={() => searchByCountry("Cambodia")}>

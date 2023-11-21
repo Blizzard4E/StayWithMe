@@ -4,7 +4,7 @@
     import { goto } from "$app/navigation";
     import { user } from "../stores";
     import jwt_decode from "jwt-decode";
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     export let data;
 
     let userData;
@@ -41,7 +41,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -83,7 +83,7 @@
                 transition("/login");
             });
             if (tokenCheck) {
-                fetch("https://stay-withme-api.cyclic.app/users/getInfo", {
+                fetch(PUBLIC_API_URL + "/users/getInfo", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -165,7 +165,7 @@
                     newData.username = editName;
                 }
                 loadingText = "Updating Profile";
-                fetch("https://stay-withme-api.cyclic.app/users/update", {
+                fetch(PUBLIC_API_URL + "/users/update", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -256,8 +256,10 @@
                             <button
                                 class="confirm"
                                 on:click={updateUser}
-                                disabled={isLoading}>Confirm</button
+                                disabled={isLoading}
                             >
+                                Confirm
+                            </button>
                         {/if}
                         <button class="edit" on:click={toggleEdit}>
                             {#if editMode}
@@ -266,8 +268,9 @@
                                 Edit
                             {/if}
                         </button>
-                        <button class="logout" on:click={logOut}>Log Out</button
-                        >
+                        <button class="logout" on:click={logOut}>
+                            Log Out
+                        </button>
                     </div>
                 </div>
             </div>

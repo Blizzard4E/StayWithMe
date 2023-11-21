@@ -10,7 +10,7 @@
     import ThreeDBackgroundVerticalDark from "./ThreeDBackgroundVerticalDark.svelte";
     import BackgroundStarsRed from "./BackgroundStarsRed.svelte";
     import BackgroundStarsRedBehind from "./BackgroundStarsRedBehind.svelte";
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     let userData;
     let hotelData;
     let isDark;
@@ -33,7 +33,7 @@
             return;
         }
         let myToken = localStorage.getItem("refresh_token");
-        fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+        fetch(PUBLIC_API_URL + "/autoLogin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -102,10 +102,14 @@
                     transition("/");
                 }}
             >
-                <h1>S<span>T</span>A<span>Y</span></h1>
+                <h1>S<span>T</span>A<span>Y</span>
+                </h1>
                 <h2>
-                    W<span class="medium">I</span><span class="small">TH</span
-                    ><span class="medium">M</span>E
+                    W
+                    <span class="medium">I</span>
+                    <span class="small">TH</span>
+                    <span class="medium">M</span>
+                    E
                 </h2>
             </div>
             {#if !userData && !hotelData}
@@ -115,22 +119,28 @@
                             if ($page.url.pathname != "/login")
                                 transition("/login");
                             console.log($page.url.pathname);
-                        }}>Login</a
+                        }}
                     >
+                        Login
+                    </a>
                     <a
                         on:click={() => {
                             if ($page.url.pathname != "/signUp")
                                 transition("/signUp");
                             console.log($page.url.pathname);
-                        }}>Create User Account</a
+                        }}
                     >
+                        Create User Account
+                    </a>
                     <a
                         on:click={() => {
                             if ($page.url.pathname != "/createHotel")
                                 transition("/createHotel");
                             console.log($page.url.pathname);
-                        }}>Create Hotel Account</a
+                        }}
                     >
+                        Create Hotel Account
+                    </a>
                 </div>
             {/if}
             {#if userData}
@@ -140,15 +150,19 @@
                             if ($page.url.pathname != "/search")
                                 transition("/search");
                             console.log($page.url.pathname);
-                        }}>Search</a
+                        }}
                     >
+                        Search
+                    </a>
                     <a
                         on:click={() => {
                             if ($page.url.pathname != "/home")
                                 transition("/home");
                             console.log($page.url.pathname);
-                        }}>Home</a
+                        }}
                     >
+                        Home
+                    </a>
                     <div
                         class="profile"
                         on:click={() => {
@@ -158,8 +172,8 @@
                         }}
                     >
                         <h3>
-                            <span>{userData.username[0]}</span
-                            >{userData.username.substring(1)}
+                            <span>{userData.username[0]}</span>
+                            {userData.username.substring(1)}
                         </h3>
                         <img src={userData.profile_pic} alt="" />
                     </div>
@@ -169,8 +183,8 @@
                 <div class="others">
                     <div class="profile">
                         <h3>
-                            <span>{hotelData.name[0]}</span
-                            >{hotelData.name.substring(1)}
+                            <span>{hotelData.name[0]}</span>
+                            {hotelData.name.substring(1)}
                         </h3>
                         <img src={hotelData.images[4]} alt="" />
                     </div>

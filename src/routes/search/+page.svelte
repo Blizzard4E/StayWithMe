@@ -1,11 +1,12 @@
 <script>
+    import { PUBLIC_API_URL } from "$env/static/public";
     import { onMount } from "svelte";
     import BackgroundStarsPink from "../../components/BackgroundStarsPink.svelte";
     import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
     import { country, user } from "../stores";
     import jwt_decode from "jwt-decode";
-
+    export let data;
     let countryData;
     let searchText = "";
     let searchResults = [];
@@ -67,7 +68,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -107,19 +108,16 @@
                 });
                 if (tokenCheck) {
                     isLoading = true;
-                    fetch(
-                        "https://stay-withme-api.cyclic.app/users/searchHotels",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                token: localStorage.getItem("access_token"),
-                                country: countryData,
-                            }),
-                        }
-                    )
+                    fetch(PUBLIC_API_URL + "/users/searchHotels", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            token: localStorage.getItem("access_token"),
+                            country: countryData,
+                        }),
+                    })
                         .then((res) => res.json())
                         .then((jsonData) => {
                             if (jsonData.status == 200) {
@@ -223,16 +221,20 @@
                             turnOffFilters();
                             alphabetical = true;
                             applyFilter();
-                        }}>A-Z</button
+                        }}
                     >
+                        A-Z
+                    </button>
                     <button
                         class:active={notAlphabetical}
                         on:click={() => {
                             turnOffFilters();
                             notAlphabetical = true;
                             applyFilter();
-                        }}>Z-A</button
+                        }}
                     >
+                        Z-A
+                    </button>
                 </div>
                 <h3>Ratings</h3>
                 <div>
@@ -242,16 +244,20 @@
                             turnOffFilters();
                             ratingsHigh = true;
                             applyFilter();
-                        }}>High to Low</button
+                        }}
                     >
+                        High to Low
+                    </button>
                     <button
                         class:active={ratingsLow}
                         on:click={() => {
                             turnOffFilters();
                             ratingsLow = true;
                             applyFilter();
-                        }}>Low to High</button
+                        }}
                     >
+                        Low to High
+                    </button>
                 </div>
             </div>
             <div>

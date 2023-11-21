@@ -3,6 +3,7 @@
     import jwt_decode from "jwt-decode";
     import { goto } from "$app/navigation";
     import { darkMode } from "../store";
+    import { PUBLIC_API_URL } from "$env/static/public";
     const benefits = [
         "Bedroom",
         "Bathroom",
@@ -48,7 +49,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -84,7 +85,7 @@
         });
         if (tokenCheck) {
             isLoading = true;
-            fetch("https://stay-withme-api.cyclic.app/hotels/update", {
+            fetch(PUBLIC_API_URL + "/hotels/update", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

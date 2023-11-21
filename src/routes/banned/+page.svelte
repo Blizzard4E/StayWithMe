@@ -32,7 +32,9 @@
 <div class="main-bg" class:dark={isDark == 1}>
     <div class="center container">
         <div>
-            <h1>Account is <span>BANNED</span></h1>
+            <h1>
+                Account is <span>BANNED</span>
+            </h1>
             <div class="center"><button on:click={logOut}>Log Out</button></div>
         </div>
     </div>

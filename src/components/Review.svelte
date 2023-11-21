@@ -5,7 +5,7 @@
     import { onMount } from "svelte";
     import Report from "./Report.svelte";
     import { darkMode } from "../store";
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     let userData;
     let hotelReviews = [];
     let isDark;
@@ -40,7 +40,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -76,7 +76,7 @@
         });
         if (tokenCheck) {
             isLoading = true;
-            fetch("https://stay-withme-api.cyclic.app/users/review", {
+            fetch(PUBLIC_API_URL + "/users/review", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -109,7 +109,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("https://stay-withme-api.cyclic.app/users/getHotelReviews", {
+            fetch(PUBLIC_API_URL + "/users/getHotelReviews", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -204,8 +204,10 @@
             </div>
             <button
                 on:click|preventDefault={sendReview}
-                disabled={feedback == ""}>Send</button
+                disabled={feedback == ""}
             >
+                Send
+            </button>
             {#if isLoading}
                 <div class="loading">
                     <div class="lds-ring">

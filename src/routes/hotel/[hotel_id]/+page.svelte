@@ -5,7 +5,7 @@
     import { goto } from "$app/navigation";
     import jwt_decode from "jwt-decode";
     import { user } from "../../stores";
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     export let data;
 
     let userData;
@@ -40,7 +40,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -88,7 +88,7 @@
         });
         if (tokenCheck) {
             const response = await fetch(
-                "https://stay-withme-api.cyclic.app/users/getHotelInfo",
+                PUBLIC_API_URL + "/users/getHotelInfo",
                 {
                     method: "POST",
                     headers: {
@@ -118,7 +118,7 @@
         });
         if (tokenCheck) {
             isLoading = true;
-            fetch("https://stay-withme-api.cyclic.app/users/bookRoom", {
+            fetch(PUBLIC_API_URL + "/users/bookRoom", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -166,7 +166,9 @@
                     <img class="hotel-cover" src={hotelData.images[4]} alt="" />
                     <div class="info">
                         <h1>{hotelData.name}</h1>
-                        <h3>Country: <b>{hotelData.country}</b></h3>
+                        <h3>
+                            Country: <b>{hotelData.country}</b>
+                        </h3>
                         <h3>Google Map:</h3>
                         <iframe
                             src={"https://maps.google.com/maps?&q=" +
@@ -278,8 +280,10 @@
                 <button
                     class="book"
                     on:click={bookRoom}
-                    disabled={!selectedRoom || isLoading}>Book Room</button
+                    disabled={!selectedRoom || isLoading}
                 >
+                    Book Room
+                </button>
             </div>
             <Review {data} />
         </div>
@@ -318,6 +322,7 @@
         .rooms {
             ul {
                 .available {
+                    color: white;
                     border: 1px solid grey;
                     &:hover {
                         background-color: $dark-red;
@@ -325,6 +330,10 @@
                 }
             }
             .active {
+                background-color: $dark-red;
+            }
+            .available.active {
+                border: none;
                 background-color: $dark-red;
             }
         }
@@ -464,6 +473,9 @@
         h2 {
             font-size: 1.3rem;
         }
+        .active {
+            background-color: $pink2;
+        }
         ul {
             margin-top: 0.5rem;
             display: grid;
@@ -508,12 +520,12 @@
             }
             .available.active {
                 border: none;
+                background-color: $pink2;
             }
         }
     }
     .active {
         border: none;
-        background-color: $pink2;
         transform: scale(1.05);
         h3,
         p {

@@ -4,7 +4,7 @@
     import { goto } from "$app/navigation";
     export let data;
     let isDark;
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     darkMode.subscribe((value) => (isDark = value));
     const countries = [
         "Bangladesh",
@@ -158,7 +158,7 @@
         loadingText = "Uploading Images";
         const uploadedImages = await uploadImages();
         loadingText = "Creating Hotel";
-        fetch("https://stay-withme-api.cyclic.app/hotels/signUp", {
+        fetch(PUBLIC_API_URL + "/hotels/signUp", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -211,7 +211,10 @@
 <div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
         <form on:submit|preventDefault={signUp}>
-            <h1><span>Create</span> A Hotel</h1>
+            <h1>
+                <span>Create</span>
+                A Hotel
+            </h1>
             <h3>Hotel Name</h3>
             <div>
                 <input

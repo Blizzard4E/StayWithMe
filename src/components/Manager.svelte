@@ -10,7 +10,7 @@
     let hotelData;
     let onGoingBookings = [];
     let isDark;
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     darkMode.subscribe((value) => (isDark = value));
 
     let roomsData = [],
@@ -40,7 +40,7 @@
                     return;
                 }
                 let myToken = localStorage.getItem("refresh_token");
-                fetch("https://stay-withme-api.cyclic.app/autoLogin", {
+                fetch(PUBLIC_API_URL + "/autoLogin", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -75,7 +75,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("https://stay-withme-api.cyclic.app/hotels/checkOut", {
+            fetch(PUBLIC_API_URL + "/hotels/checkOut", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -118,7 +118,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("https://stay-withme-api.cyclic.app/hotels/onGoing", {
+            fetch(PUBLIC_API_URL + "/hotels/onGoing", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -146,7 +146,7 @@
             transition("/login");
         });
         if (tokenCheck) {
-            fetch("https://stay-withme-api.cyclic.app/hotels/getRooms", {
+            fetch(PUBLIC_API_URL + "/hotels/getRooms", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -182,7 +182,7 @@
                 hotel_id: hotelData.id,
                 token: localStorage.getItem("access_token"),
             };
-            fetch("https://stay-withme-api.cyclic.app/hotels/createRoom", {
+            fetch(PUBLIC_API_URL + "/hotels/createRoom", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -205,7 +205,7 @@
         });
         if (tokenCheck) {
             let token = localStorage.getItem("access_token");
-            fetch("https://stay-withme-api.cyclic.app/hotels/removeRoom", {
+            fetch(PUBLIC_API_URL + "/hotels/removeRoom", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -268,11 +268,14 @@
             <button
                 on:click={addRoom}
                 disabled={falseBeds || falseRoomNumber || falsePrice}
-                >Create</button
             >
+                Create
+            </button>
         </section>
         <section>
-            <h1>Rooms <span>- {roomsData.length}</span></h1>
+            <h1>
+                Rooms <span>- {roomsData.length}</span>
+            </h1>
             <ul>
                 {#if roomsData.length > 0}
                     {#each roomsData as room}
@@ -304,15 +307,17 @@
                                     <button
                                         class="reject"
                                         on:click={removeRoom(room.id)}
-                                        >Remove
+                                    >
+                                        Remove
                                     </button>
                                 {/if}
                                 {#if room.availability == 0}
                                     <button
                                         class="checkout"
                                         on:click={checkOut(room)}
-                                        >Make Available</button
                                     >
+                                        Make Available
+                                    </button>
                                 {/if}
                             </div>
                         </li>

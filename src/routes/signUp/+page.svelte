@@ -3,6 +3,7 @@
     import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
     import { json } from "@sveltejs/kit";
+    import { PUBLIC_API_URL } from "$env/static/public";
     export let data;
     let isDark;
 
@@ -82,7 +83,7 @@
             .then((res) => res.json())
             .then(async (image) => {
                 loadingText = "Signing up";
-                fetch("https://stay-withme-api.cyclic.app/users/signUp", {
+                fetch(PUBLIC_API_URL + "/users/signUp", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -144,7 +145,10 @@
 <div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
         <form on:submit|preventDefault={signUp}>
-            <h1><span>Create</span> An Account</h1>
+            <h1>
+                <span>Create</span>
+                An Account
+            </h1>
             <h3>Username</h3>
             <div>
                 <input

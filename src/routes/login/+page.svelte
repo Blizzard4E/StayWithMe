@@ -3,7 +3,7 @@
     import { darkMode, transitionState } from "../../store";
     import { goto } from "$app/navigation";
     let isDark;
-
+    import { PUBLIC_API_URL } from "$env/static/public";
     darkMode.subscribe((value) => (isDark = value));
     let email = "",
         password = "",
@@ -36,7 +36,7 @@
             return;
         }
         isLoading = true;
-        fetch("https://stay-withme-api.cyclic.app/login", {
+        fetch(PUBLIC_API_URL + "/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -75,7 +75,10 @@
 <div class="main-bg" class:dark={isDark == 1}>
     <div class="container">
         <form on:submit|preventDefault={login}>
-            <h1><span>L</span>ogin</h1>
+            <h1>
+                <span>L</span>
+                ogin
+            </h1>
             <h3>Email</h3>
             <div>
                 <input
