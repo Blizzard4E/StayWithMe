@@ -43,7 +43,7 @@
         <div class="container">
             <h1>
                 <span>Top</span>
-                 Places
+                Places
             </h1>
             <div class="grid-1">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
