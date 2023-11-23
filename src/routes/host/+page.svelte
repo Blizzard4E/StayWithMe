@@ -1,6 +1,7 @@
 <!-- Your Svelte component -->
 <script>
-  export let hostName;
+    export let data;
+    console.log(data);
 </script>
 
-<h1>The hostname is: {hostName}</h1>
+<h1>The hostname is: {data.hostName}</h1>
